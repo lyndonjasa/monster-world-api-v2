@@ -2,7 +2,7 @@ import express from 'express'
 import cors from 'cors'
 
 import * as dotenv from 'dotenv'
-dotenv.config({ path: `./src/environments/.env.${process.env.NODE_ENV}` });
+dotenv.config({ path: `./src/environments/.env.${process.env.NODE_ENV.trim()}` });
 
 import config from './shared/config'
 console.log(config);
