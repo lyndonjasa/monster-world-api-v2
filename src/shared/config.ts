@@ -1,4 +1,4 @@
 export default {
-  environment: process.env.NODE_ENV,
+  environment: process.env.ENVIRONMENT,
   dbConnection: process.env.DB_CONNECTION
 }

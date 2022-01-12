@@ -8,8 +8,8 @@
     "build": "tsc",
     "postinstall": "npm run build",
     "start": "node dist/index.js",
-    "dev": "SET NODE_ENV=development && tsc-watch -p tsconfig.json --onSuccess \"node ./dist/app.js\"",
-    "inspect": "SET NODE_ENV=development && tsc-watch -p tsconfig.json --onSuccess \"node inspect ./dist/app.js\""
+    "dev": "SET NODE_ENV=development && tsc-watch -p tsconfig.json --onSuccess \"node ./dist/index.js\"",
+    "inspect": "SET NODE_ENV=development && tsc-watch -p tsconfig.json --onSuccess \"node inspect ./dist/index.js\""
   },
   "keywords": [],
   "author": "",
