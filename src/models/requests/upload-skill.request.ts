@@ -13,7 +13,7 @@ export class UploadSkillRequest {
     instance: number;
   }
   description: string;
-  ignoreDefense: boolean;
+  ignoreDefense: number;
   penalty: {
     damage: number;
     target: string;

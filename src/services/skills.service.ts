@@ -19,18 +19,22 @@ export const getSkills = async () => {
  * Uploads skills to the database
  * @param request UploadSkillRequest[]
  */
-export const uploadSkills = async (request: UploadSkillRequest[]) => {
+export const uploadSkills = (request: UploadSkillRequest[]) => {
   const skills: SkillModel[] = [];
 
   request.forEach(r => {
     const skill: SkillModel = {
       cost: r.cost,
-      ignoreDefense: r.ignoreDefense,
+      ignoreDefense: Boolean(r.ignoreDefense),
       name: r.skill,
       power: r.power,
       skillElement: convertToNumberElement(r.element),
       skillTarget: convertToNumberTarget(r.target),
       skillType: convertToNumberType(r.type)
     }
+
+    skills.push(skill);
   });
+
+  return skills;
 }
