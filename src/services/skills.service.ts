@@ -1,4 +1,4 @@
-import { convertToNumberElement, convertToNumberTarget, convertToNumberType } from "../helpers/skill.helper";
+import { convertToNumberBuff, convertToNumberBuffInstance, convertToNumberElement, convertToNumberTarget, convertToNumberType } from "../helpers/skill.helper";
 import { SkillModel } from "../models/core/skill.model";
 import { UploadSkillRequest } from "../models/requests/upload-skill.request";
 import Skill from "../mongo/models/skill"
@@ -31,6 +31,27 @@ export const uploadSkills = (request: UploadSkillRequest[]) => {
       skillElement: convertToNumberElement(r.element),
       skillTarget: convertToNumberTarget(r.target),
       skillType: convertToNumberType(r.type)
+    }
+
+    const penalty: { damagePercentage: number, target: number } = {
+      damagePercentage: r.penalty.damage * 100,
+      target: convertToNumberTarget(r.penalty.target)
+    }
+
+    // add penalty if percentage is not 0
+    if (penalty.damagePercentage !== 0) {
+      skill.penalty = penalty;
+    }
+
+    // if status has a target, add status to skill
+    if (r.status.target !== '') {
+      skill.status = {
+        buff: convertToNumberBuff(r.status.effect),
+        chance: r.status.chance * 100,
+        duration: r.status.turns,
+        statusInstance: convertToNumberBuffInstance(r.status.instance),
+        target: convertToNumberTarget(r.status.target)
+      }
     }
 
     skills.push(skill);

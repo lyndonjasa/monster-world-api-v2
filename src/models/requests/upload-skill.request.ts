@@ -10,7 +10,7 @@ export class UploadSkillRequest {
     target: string;
     chance: number;
     turns: number;
-    instance: number;
+    instance: string;
   }
   description: string;
   ignoreDefense: number;
