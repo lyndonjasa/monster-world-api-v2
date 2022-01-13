@@ -19,7 +19,7 @@ export const getSkills = async () => {
  * Uploads skills to the database
  * @param request UploadSkillRequest[]
  */
-export const uploadSkills = (request: UploadSkillRequest[]) => {
+export const uploadSkills = async (request: UploadSkillRequest[]) => {
   const skills: SkillModel[] = [];
 
   request.forEach(r => {
@@ -57,5 +57,20 @@ export const uploadSkills = (request: UploadSkillRequest[]) => {
     skills.push(skill);
   });
 
-  return skills;
+  const session = await Skill.startSession();
+  session.startTransaction();
+
+  try {
+    await Skill.deleteMany();
+
+    const result = await Skill.insertMany(skills);
+
+    return result;
+  } catch (error) {
+    session.abortTransaction();
+
+    throw error
+  } finally {
+    session.endSession();
+  }
 }

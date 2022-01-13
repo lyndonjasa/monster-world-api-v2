@@ -20,11 +20,11 @@ SkillRoute.get('/skills', async (_, res) => {
 /**
  * Upload and Convert Skills
  */
-SkillRoute.post('/skills/upload', (req, res) => {
+SkillRoute.post('/skills/upload', async (req, res) => {
   try {
     const request = req.body as UploadSkillRequest[]
 
-    const skills = uploadSkills(request);
+    const skills = await uploadSkills(request);
 
     res.send(skills);
   } catch (error) {
