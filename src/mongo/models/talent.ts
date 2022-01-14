@@ -1,5 +1,5 @@
 import { Schema, model } from "mongoose";
-import { ITalent } from "../interfaces/talent.interface";
+import { ITalentDocument } from "../interfaces/talent.interface";
 
 const schema = new Schema({
   name: String,
@@ -9,6 +9,6 @@ const schema = new Schema({
   points: Number
 })
 
-const Talent = model<ITalent>('Talent', schema, 'talents');
+const Talent = model<ITalentDocument>('Talent', schema, 'talents');
 
 export default Talent;
