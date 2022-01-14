@@ -1,7 +1,7 @@
 import { parseCategory, parseTalentType } from "../helpers/talent.helper";
 import { TalentModel } from "../models/core/talent.model";
 import { UploadTalentRequest } from "../models/requests/upload-talent.request";
-import { ITalentDocument } from "../mongo/interfaces/talent.interface";
+import { ITalent, ITalentDocument } from "../mongo/interfaces/talent.interface";
 import Talent from "../mongo/models/talent"
 
 /**
@@ -22,7 +22,7 @@ export async function getTalents(): Promise<ITalentDocument[]> {
  * Uploads Talents to database
  * @param talents Talents Array
  */
-export async function uploadTalents(request: UploadTalentRequest[]): Promise<void> {
+export async function uploadTalents(request: UploadTalentRequest[]): Promise<ITalentDocument[]> {
   const session = await Talent.startSession();
   session.startTransaction();
 
@@ -40,7 +40,9 @@ export async function uploadTalents(request: UploadTalentRequest[]): Promise<voi
       });
     })
 
-    await Talent.insertMany(talents);
+    const result = await Talent.insertMany(talents);
+
+    return result
   } catch (error) {
     session.abortTransaction();
 

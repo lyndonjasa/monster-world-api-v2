@@ -22,9 +22,11 @@ TalentRoute.get('/talents', async (_, res) => {
  */
 TalentRoute.post('/talents/upload', async (req, res) => {
   try {
-    const talents = req.body as UploadTalentRequest[];
+    const request = req.body as UploadTalentRequest[];
 
-    await uploadTalents(talents);
+    const talents = await uploadTalents(request);
+
+    res.send(talents);
   } catch (error) {
     res.status(500).send(error);
   }
