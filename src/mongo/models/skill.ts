@@ -1,4 +1,5 @@
 import { model, Schema } from 'mongoose'
+import { ISkillDocument } from '../interfaces/skill.interface';
 
 const schema = new Schema({
   name: String,
@@ -21,6 +22,6 @@ const schema = new Schema({
   }
 })
 
-const Skill = model('Skill', schema, 'skills');
+const Skill = model<ISkillDocument>('Skill', schema, 'skills');
 
 export default Skill;

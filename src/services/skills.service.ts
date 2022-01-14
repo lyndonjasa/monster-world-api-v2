@@ -1,15 +1,18 @@
 import { convertToNumberBuff, convertToNumberBuffInstance, convertToNumberElement, convertToNumberTarget, convertToNumberType } from "../helpers/skill.helper";
 import { SkillModel } from "../models/core/skill.model";
 import { UploadSkillRequest } from "../models/requests/upload-skill.request";
+import { ISkillDocument } from "../mongo/interfaces/skill.interface";
 import Skill from "../mongo/models/skill"
 
 /**
  * Lists down all skills
  * @returns 
  */
-export const getSkills = async () => {
+export const getSkills = async (): Promise<ISkillDocument[]> => {
   try {
-    return await Skill.find({});
+    const skills = await Skill.find({});
+
+    return skills
   } catch (error) {
     throw error
   }

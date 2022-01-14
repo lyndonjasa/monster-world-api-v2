@@ -1,6 +1,6 @@
-import { ISkill } from "../../mongo/interfaces/skill.interface";
+import { Document } from "mongoose";
 
-export class SkillModel implements ISkill {
+export interface ISkill {
   name: string;
   cost: number;
   power: number;
@@ -11,12 +11,14 @@ export class SkillModel implements ISkill {
   penalty?: {
     damagePercentage: number;
     target: number;
-  };
+  },
   status?: {
     duration: number;
     statusInstance: number;
     target: number;
     buff: number;
-    chance: number
+    chance: Number
   }
 }
+
+export interface ISkillDocument extends ISkill, Document {}
