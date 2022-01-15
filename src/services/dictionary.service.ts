@@ -18,6 +18,20 @@ export async function getDictionaries(): Promise<IDictionaryDocument[]> {
 }
 
 /**
+ * Get List of Values by type
+ * @param type string
+ */
+export async function getDictionariesByType(dictionaryType: string): Promise<IDictionaryDocument[]> {
+  try {
+    const result = await Dictionary.find({ type: dictionaryType });
+
+    return result
+  } catch (error) {
+    throw error
+  }
+}
+
+/**
  * Upload List of Values to be used by the application
  * @param request Dictionary Values
  */
