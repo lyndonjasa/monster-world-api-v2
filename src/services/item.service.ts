@@ -4,6 +4,20 @@ import { IItemDocument } from "../mongo/interfaces/item.interface";
 import Item from "../mongo/models/item";
 
 /**
+ * Get All Items
+ * @returns Items array
+ */
+export async function getItems(): Promise<IItemDocument[]> {
+  try {
+    const items = await Item.find();
+
+    return items;
+  } catch (error) {
+    throw error
+  }
+}
+
+/**
  * Upload and Conver Items
  * @param request Array of Items
  */
