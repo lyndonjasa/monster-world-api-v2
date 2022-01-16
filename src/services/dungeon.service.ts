@@ -4,6 +4,33 @@ import { IDungeonDocument } from "../mongo/interfaces/dungeon.interface";
 import Dungeon from "../mongo/models/dungeon";
 
 /**
+ * Get All Dungeons
+ */
+export async function getDungeons(): Promise<IDungeonDocument[]> {
+  try {
+    const dungeons = await Dungeon.find();
+
+    return dungeons
+  } catch (error) {
+    throw error
+  }
+}
+
+/**
+ * Get Dungeon by Id
+ * @param id dungeon id
+ */
+export async function getDungeonById(id: string): Promise<IDungeonDocument> {
+  try {
+    const dungeon = await Dungeon.findById(id)
+
+    return dungeon
+  } catch (error) {
+    throw error
+  }
+}
+
+/**
  * Uploads and Converts Dungeon data
  * @param request Dungeons
  */
