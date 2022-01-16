@@ -21,6 +21,21 @@ export async function getMonsters(): Promise<IMonsterDocument[]> {
 }
 
 /**
+ * Get Monster By Id
+ * @param id Monster Id
+ * @returns Monster
+ */
+export async function getMonster(id: string): Promise<IMonsterDocument> {
+  try {
+    const monster = await Monster.findById(id).populate('skills');
+
+    return monster
+  } catch (error) {
+    throw error
+  }
+}
+ 
+/**
  * Upload Monsters base data
  * @param request Monster data
  */
