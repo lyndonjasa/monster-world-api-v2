@@ -4,4 +4,7 @@ export class UploadEvolutionRequest {
   currencyIncrement: number;
   exp: number;
   level: number;
+  catchRate: number;
+  cardPrerequisite: number;
+  maxCardBonus: number;
 }

@@ -37,7 +37,10 @@ export async function uploadEvolutions(request: UploadEvolutionRequest[]): Promi
           base: r.currency,
           increment: r.currencyIncrement
         },
-        name: r.name
+        name: r.name,
+        cardPrerequisite: r.cardPrerequisite,
+        catchRate: r.catchRate,
+        maxCardBonus: r.maxCardBonus
       });
     })
 

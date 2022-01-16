@@ -8,6 +8,9 @@ export interface IEvolution {
   }
   baseExp: number;
   baseLevel: number;
+  catchRate: number;
+  cardPrerequisite: number;
+  maxCardBonus: number;
 }
 
 export interface IEvolutionDocument extends IEvolution, Document {}
