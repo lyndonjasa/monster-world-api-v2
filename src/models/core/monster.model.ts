@@ -9,5 +9,5 @@ export class MonsterModel implements IMonster {
   element: number;
   skills: string[];
   stage: string;
-  evolution: string;
+  evolution?: string;
 }

@@ -19,7 +19,7 @@ export interface IMonster {
   element: number;
   skills: string[];
   stage: string;
-  evolution: string;
+  evolution?: string;
 }
 
 export interface IMonsterDocument extends IMonster, Document {}
