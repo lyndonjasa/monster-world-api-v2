@@ -11,6 +11,7 @@ const schema = new Schema({
     type: String,
     required: true
   },
+  salt: String,
   email: {
     type: String,
     required: true
