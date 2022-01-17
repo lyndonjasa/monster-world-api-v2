@@ -1,10 +1,11 @@
 import { CreateUserRequest } from "../models/requests/create-user.request";
 import { IUser } from "../mongo/interfaces/user.interface";
 import moment from 'moment';
-import { generateSalt, hashPassword } from "../helpers/security.helper";
+import { generateSalt, getToken, hashPassword } from "../helpers/security.helper";
 import User from "../mongo/models/user";
 import { LoginRequest } from "../models/requests/login.request";
 import { ErrorResponse } from "../models/responses/error.response";
+import { LoginResponse } from "../models/responses/login.response";
 
 /**
  * Create a User
@@ -44,7 +45,7 @@ export async function createUser(request: CreateUserRequest): Promise<void> {
  * Logins and returns the user id if successful
  * @param request user credentials
  */
-export async function login(request: LoginRequest): Promise<{ userId: string }> {
+export async function login(request: LoginRequest): Promise<LoginResponse> {
   try {
     const username = request.username;
 
@@ -58,8 +59,11 @@ export async function login(request: LoginRequest): Promise<{ userId: string }> 
       throw { code: 404, message: 'User not found' }
     }
 
+    const jwt = await getToken(user.id);
+
     return {
-      userId: user.id 
+      userId: user.id,
+      authToken: jwt
     }
   } catch (error) {
     throw error
