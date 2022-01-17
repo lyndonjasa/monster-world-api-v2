@@ -1,8 +1,9 @@
 import { NextFunction, Request, Response } from "express";
 import { validateToken } from "../helpers/security.helper";
+import { IUserRequestPayload } from "../models/core/user-request.payload";
 import { findUser } from "../services/user.service";
 
-export const auth = async (req: Request, res: Response, next: NextFunction) => {
+export const auth = async (req: IUserRequestPayload, res: Response, next: NextFunction) => {
   try {
     const authToken = req.header('Authorization').replace('Bearer ', '');
     const decodedToken = await validateToken(authToken);
@@ -17,7 +18,7 @@ export const auth = async (req: Request, res: Response, next: NextFunction) => {
       throw new Error()
     }
 
-    req['user'] = user
+    req.user = user
 
     next();
   } catch (error) {
