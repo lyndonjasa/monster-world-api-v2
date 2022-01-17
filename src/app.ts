@@ -7,6 +7,7 @@ dotenv.config({ path: `./src/environments/.env.${process.env.NODE_ENV.trim()}` }
 import './mongo/setup'
 import config from './shared/config'
 
+
 const app = express();
 app.use(cors());
 app.use(express.json());

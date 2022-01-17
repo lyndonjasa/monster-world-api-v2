@@ -1,5 +1,5 @@
 import { CreateUserRequest } from "../models/requests/create-user.request";
-import { IUser } from "../mongo/interfaces/user.interface";
+import { IUser, IUserDocument } from "../mongo/interfaces/user.interface";
 import moment from 'moment';
 import { generateSalt, getToken, hashPassword } from "../helpers/security.helper";
 import User from "../mongo/models/user";
@@ -65,6 +65,21 @@ export async function login(request: LoginRequest): Promise<LoginResponse> {
       userId: user.id,
       authToken: jwt
     }
+  } catch (error) {
+    throw error
+  }
+}
+
+/**
+ * Find the user by its Id
+ * @param id user id
+ * @returns IUserDocument
+ */
+export async function findUser(id: string): Promise<IUserDocument> {
+  try {
+    const user = await User.findById(id);
+
+    return user;
   } catch (error) {
     throw error
   }

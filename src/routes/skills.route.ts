@@ -1,13 +1,14 @@
 import express from 'express'
 import { UploadSkillRequest } from '../models/requests/upload-skill.request';
 import { getSkills, uploadSkills } from '../services/skills.service';
+import { auth } from '../shared/auth';
 
 const SkillRoute = express.Router();
 
 /**
  * Get List of Skills
  */
-SkillRoute.get('/skills', async (_, res) => {
+SkillRoute.get('/skills', auth, async (req, res) => {
   try {
     const skills = await getSkills();
 

@@ -1,6 +1,7 @@
 import { hash, genSalt } from 'bcrypt'
 import config from '../shared/config';
-import { sign, verify } from 'jsonwebtoken'
+import { sign, verify, JwtPayload } from 'jsonwebtoken'
+import { ISecurityPayload } from '../models/core/security.payload';
 
 /**
  * Hashes a password
@@ -37,8 +38,8 @@ export async function getToken(id: string): Promise<string> {
  * @param token the JWT Token
  * @returns token details
  */
-export async function verifyToken(token: string): Promise<any> {
-  const data = verify(token, config.secretKey);
+export async function validateToken(token: string): Promise<ISecurityPayload> {
+  const data = verify(token, config.secretKey) as ISecurityPayload;
 
   return data
 }
