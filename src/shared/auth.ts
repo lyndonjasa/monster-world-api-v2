@@ -1,8 +1,11 @@
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, Response } from "express";
 import { validateToken } from "../helpers/security.helper";
 import { IUserRequestPayload } from "../models/core/user-request.payload";
 import { findUser } from "../services/user.service";
 
+/**
+ * Authentication Middleware
+ */
 export const auth = async (req: IUserRequestPayload, res: Response, next: NextFunction) => {
   try {
     const authToken = req.header('Authorization').replace('Bearer ', '');
