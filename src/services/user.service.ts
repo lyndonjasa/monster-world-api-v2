@@ -4,6 +4,7 @@ import moment from 'moment';
 import { generateSalt, hashPassword } from "../helpers/security.helper";
 import User from "../mongo/models/user";
 import { LoginRequest } from "../models/requests/login.request";
+import { ErrorResponse } from "../models/responses/error.response";
 
 /**
  * Create a User
@@ -11,9 +12,12 @@ import { LoginRequest } from "../models/requests/login.request";
  */
 export async function createUser(request: CreateUserRequest): Promise<void> {
   try {
-    const userExists = await User.findOne({ username: request.username })
+    const userExists = await User.findOne({ $or: [
+      { username: request.username },
+      { email: request.email }
+    ] })
     if (userExists) {
-      throw { code: 400, message: 'User already exists' }
+      throw { errorCode: 400, errorMessage: 'Username or Email is already used' } as ErrorResponse
     }
 
     const saltValue = await generateSalt();

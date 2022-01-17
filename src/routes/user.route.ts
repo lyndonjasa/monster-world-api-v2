@@ -15,11 +15,11 @@ UserRouter.post('/users/signup', async (req, res) => {
 
     res.send('Success');
   } catch (error) {
-    if (error.code) {
-      res.status(error.code).send(error.message);
+    if (error.errorCode) {
+      res.status(error.errorCode).send(error.errorMessage);
+    } else {
+      res.status(500).send(error);
     }
-
-    res.status(500).send(error);
   }
 });
 

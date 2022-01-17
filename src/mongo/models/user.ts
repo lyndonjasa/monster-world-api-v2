@@ -5,7 +5,8 @@ const schema = new Schema({
   username: {
     type: String,
     index: true,
-    required: true
+    required: true,
+    unique: true
   },
   password: {
     type: String,
@@ -14,7 +15,8 @@ const schema = new Schema({
   salt: String,
   email: {
     type: String,
-    required: true
+    required: true,
+    unique: true
   },
   createdDate: Date,
   firstName: String,
