@@ -6,7 +6,7 @@ import Monster from "./monster";
 import Skill from "./skill";
 import Talent from "./talent";
 import User from "./user";
-import DetailedMonster from "./detailed-monster";
+import Account from "./account";
 
 export {
   Dictionary,
@@ -17,5 +17,5 @@ export {
   Skill,
   Talent,
   User,
-  DetailedMonster
+  Account
 }
