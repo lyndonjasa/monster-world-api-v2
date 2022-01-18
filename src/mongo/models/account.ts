@@ -12,7 +12,7 @@ const schema = new Schema({
   party: [
     {
       type: Types.ObjectId,
-      ref: 'Monster'
+      ref: 'DetailedMonster'
     }
   ]
 })
