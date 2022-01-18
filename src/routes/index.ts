@@ -1,4 +1,5 @@
 import { Router } from "express";
+import AccountRouter from "./account.route";
 import DictionaryRouter from "./dictionary.route";
 import DungeonRouter from "./dungeon.route";
 import EvolutionRouter from "./evolutions.route";
@@ -18,5 +19,6 @@ routes.push(ItemsRouter);
 routes.push(MonsterRouter);
 routes.push(UserRouter);
 routes.push(DungeonRouter);
+routes.push(AccountRouter);
 
 export default routes;

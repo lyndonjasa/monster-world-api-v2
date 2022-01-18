@@ -15,7 +15,10 @@ export async function createAccount(request: CreateAccountRequest): Promise<Crea
   session.startTransaction();
 
   try {
-    debugger
+    const accounts = await Account.find({ userId: request.userId }).count();
+    if (accounts >= 3) {
+      throw 'User has maximized account pool'
+    }
 
     // check for existing accounts with the same name
     const accountExists = await Account.findOne({ accountName: request.accountName });
