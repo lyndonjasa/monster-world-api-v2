@@ -36,5 +36,5 @@ export function calculateStats(baseStats: IStats, statGains: IStats, currentLeve
  * @returns 
  */
 const realignStats = (base: IStats, gain: IStats, level: number, property: string) => {
-  return base[property] + (gain[property] * (level - 1))
+  return Math.floor(base[property] + (gain[property] * (level - 1)))
 }
