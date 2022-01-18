@@ -1,6 +1,7 @@
 import { AccountModel } from "../models/core/account.model";
 import { CreateAccountRequest } from "../models/requests";
 import { CreateAccountResponse } from "../models/responses";
+import { DetailedMonsterResponse } from "../models/responses/detailed-monster.response";
 import { IAccountDocument, IDetailedMonster } from "../mongo/interfaces";
 import { Account, DetailedMonster, Monster } from "../mongo/models";
 import config from "../shared/config";
@@ -17,7 +18,8 @@ export async function getAccount(id: string): Promise<IAccountDocument> {
                           .populate({
                             path: 'party',
                             populate: {
-                              path: 'monster'
+                              path: 'monster',
+                              select: 'name element'
                             }
                           });
 
@@ -37,11 +39,20 @@ export async function getAccountParty(id: string): Promise<IAccountDocument> {
                           .populate('party')
                           .populate({
                             path: 'party',
+                            select: '-accountId -talentPoints -__v',
                             populate: {
-                              path: 'monster'
+                              path: 'monster',
+                              select: '-evolution -__v',
+                              populate: {
+                                path: 'skills',
+                                select: '-__v -_id'
+                              }
                             }
                           })
                           .select('party');
+
+    const monsterParty: DetailedMonsterResponse[] = [];
+    
 
     return account
   } catch (error) {
