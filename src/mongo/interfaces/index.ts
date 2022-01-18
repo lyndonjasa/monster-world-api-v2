@@ -7,6 +7,7 @@ import { ISkill, ISkillDocument } from "./skill.interface";
 import { ISprite, ISpriteAnimation } from "./sprite.interface";
 import { ITalent, ITalentDocument } from "./talent.interface";
 import { IUser, IUserDocument } from "./user.interface";
+import { IDetailedMonster, IDetailedMonsterDocument } from "./detailed-monster.interface";
 
 export {
   IDictionary,
@@ -28,5 +29,7 @@ export {
   ITalent,
   ITalentDocument,
   IUser,
-  IUserDocument
+  IUserDocument,
+  IDetailedMonster,
+  IDetailedMonsterDocument
 }
