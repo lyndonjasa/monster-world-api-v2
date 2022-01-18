@@ -1,8 +1,9 @@
+import { calculateStats } from "../helpers/stat.helper";
 import { AccountModel } from "../models/core/account.model";
 import { CreateAccountRequest } from "../models/requests";
 import { CreateAccountResponse } from "../models/responses";
 import { DetailedMonsterResponse } from "../models/responses/detailed-monster.response";
-import { IAccountDocument, IDetailedMonster } from "../mongo/interfaces";
+import { IAccountDocument, IDetailedMonster, IDetailedMonsterDocument, IMonsterDocument, ISkill, ISkillDocument } from "../mongo/interfaces";
 import { Account, DetailedMonster, Monster } from "../mongo/models";
 import config from "../shared/config";
 import { evolutionStages, starterGroups } from "../shared/constants";
@@ -33,7 +34,7 @@ export async function getAccount(id: string): Promise<IAccountDocument> {
  * Retrieve the account's current party
  * @param id Account Id
  */
-export async function getAccountParty(id: string): Promise<IAccountDocument> {
+export async function getAccountParty(id: string): Promise<DetailedMonsterResponse[]> {
   try {
     const account = await Account.findById(id)
                           .populate('party')
@@ -52,9 +53,26 @@ export async function getAccountParty(id: string): Promise<IAccountDocument> {
                           .select('party');
 
     const monsterParty: DetailedMonsterResponse[] = [];
-    
+    (account.party as IDetailedMonsterDocument[]).forEach(dm => {
+      const m = dm.monster as IMonsterDocument;
 
-    return account
+      const monster: DetailedMonsterResponse = {
+        _id: dm.id,
+        currentExp: dm.currentExp,
+        element: m.element,
+        expToLevel: 10, // TODO: replace this with actual value from exp table
+        level: dm.level,
+        name: m.name,
+        skills: m.skills as ISkillDocument[],
+        sprite: m.sprite,
+        talents: dm.talents,
+        stats: calculateStats(m.baseStats, m.statGain, dm.level, dm.talents)
+      }
+
+      monsterParty.push(monster);
+    })
+
+    return monsterParty
   } catch (error) {
     throw error
   }

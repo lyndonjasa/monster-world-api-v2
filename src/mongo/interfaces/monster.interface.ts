@@ -1,4 +1,5 @@
 import { Document } from "mongoose";
+import { ISkillDocument } from ".";
 import { ISprite } from "./sprite.interface";
 
 export interface IStats {
@@ -17,7 +18,7 @@ export interface IMonster {
   statGain: IStats,
   sprite?: ISprite,
   element: number;
-  skills: string[];
+  skills: string[] | ISkillDocument[];
   stage: string;
   evolution?: string;
 }

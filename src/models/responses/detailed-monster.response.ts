@@ -1,4 +1,5 @@
-import { ISkill, ISprite, IStats } from "../../mongo/interfaces";
+import { ISkill, ISprite } from "../../mongo/interfaces";
+import { StatsModel } from "../core";
 
 export class DetailedMonsterResponse {
   _id: string;
@@ -7,10 +8,7 @@ export class DetailedMonsterResponse {
   expToLevel: number;
   talents: string[];
   name: string;
-  stats: IStats & {
-    maxMana: number;
-    maxHealth: number;
-  }
+  stats: StatsModel;
   sprite: ISprite;
   element: number;
   skills: ISkill[];

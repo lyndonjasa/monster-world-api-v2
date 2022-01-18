@@ -8,6 +8,7 @@ import { SkillModel } from "./skill.model";
 import { SpriteModel } from "./sprite.model";
 import { TalentModel } from "./talent.model";
 import { IUserRequestPayload } from "./user-request.payload";
+import { StatsModel } from "./stats.model";
 
 export {
   DictionaryModel,
@@ -19,5 +20,6 @@ export {
   SkillModel,
   SpriteModel,
   TalentModel,
-  IUserRequestPayload
+  IUserRequestPayload,
+  StatsModel
 }
