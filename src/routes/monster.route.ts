@@ -1,7 +1,7 @@
 import express, { request } from 'express'
 import { UploadMonsterRequest } from '../models/requests/upload-monster.request';
 import { UploadSpriteRequest } from '../models/requests/upload-sprite.request';
-import { getMonster, getMonsters, uploadMonsters, uploadMonsterSprites } from '../services/monster.service';
+import { getMonster, getMonsters, getStarterGroups, uploadMonsters, uploadMonsterSprites } from '../services/monster.service';
 
 const MonsterRouter = express.Router();
 
@@ -13,6 +13,20 @@ MonsterRouter.get('/monsters', async (_, res) => {
     const monsters = await getMonsters();
 
     res.send(monsters);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+})
+
+
+/**
+ * Get Rookie Groups
+ */
+ MonsterRouter.get('/monsters/starters', async (req, res) => {
+  try {
+    const groups = await getStarterGroups();
+
+    res.send(groups);
   } catch (error) {
     res.status(500).send(error);
   }

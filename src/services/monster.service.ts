@@ -2,9 +2,11 @@ import { convertToNumberElement } from "../helpers/skill.helper";
 import { MonsterModel } from "../models/core/monster.model";
 import { UploadMonsterRequest } from "../models/requests/upload-monster.request";
 import { UploadSpriteRequest } from "../models/requests/upload-sprite.request";
+import { StarterGroupResponse } from "../models/responses/starter-group.response";
 import { IMonsterDocument } from "../mongo/interfaces/monster.interface";
 import Monster from "../mongo/models/monster";
 import Skill from "../mongo/models/skill";
+import { evolutionStages, starterGroups } from "../shared/constants";
 
 /**
  * Get All Monsters
@@ -117,5 +119,32 @@ export async function uploadMonsterSprites(request: UploadSpriteRequest[]): Prom
     throw error;
   } finally {
     session.endSession();
+  }
+}
+
+/**
+ * Get Monster Starter Group
+ */
+export async function getStarterGroups(): Promise<StarterGroupResponse[]> {
+  try {
+    const rookies = await Monster.find({ stage: evolutionStages.ROOKIE })
+                            .select('name element -_id');
+
+    const groups: StarterGroupResponse[] = [];
+    starterGroups.forEach(g => {
+      const group: StarterGroupResponse = new StarterGroupResponse();
+      group.group = g.group;
+      group.monsters = []
+
+      g.monsters.forEach(m => {
+        group.monsters.push(rookies.find(r => r.name === m));
+      })
+
+      groups.push(group);
+    })
+
+    return groups;
+  } catch (error) {
+    throw error
   }
 }
