@@ -28,6 +28,8 @@ UserRouter.post('/users/signup', async (req, res) => {
  */
 UserRouter.post('/users/login', async (req, res) => {
   try {
+    debugger
+
     const request = req.body as LoginRequest;
     const user = await login(request);
 

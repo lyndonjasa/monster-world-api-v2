@@ -17,3 +17,5 @@ const schema = new Schema({
 })
 
 const DetailedMonster = model<IDetailedMonsterDocument>('DetailedMonster', schema, 'detailed-monsters');
+
+export default DetailedMonster;

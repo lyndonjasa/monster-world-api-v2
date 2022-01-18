@@ -1,9 +1,53 @@
 import { AccountModel } from "../models/core/account.model";
 import { CreateAccountRequest } from "../models/requests";
 import { CreateAccountResponse } from "../models/responses";
-import { IDetailedMonster } from "../mongo/interfaces";
-import { Account, Monster } from "../mongo/models";
+import { IAccountDocument, IDetailedMonster } from "../mongo/interfaces";
+import { Account, DetailedMonster, Monster } from "../mongo/models";
+import config from "../shared/config";
 import { evolutionStages, starterGroups } from "../shared/constants";
+
+/**
+ * Get Account Details by Id
+ * @param id Account Id
+ */
+export async function getAccount(id: string): Promise<IAccountDocument> {
+  try {
+    const account = await Account.findById(id)
+                          .populate('party')
+                          .populate({
+                            path: 'party',
+                            populate: {
+                              path: 'monster'
+                            }
+                          });
+
+    return account
+  } catch (error) {
+    throw error
+  }
+}
+
+/**
+ * Retrieve the account's current party
+ * @param id Account Id
+ */
+export async function getAccountParty(id: string): Promise<IAccountDocument> {
+  try {
+    const account = await Account.findById(id)
+                          .populate('party')
+                          .populate({
+                            path: 'party',
+                            populate: {
+                              path: 'monster'
+                            }
+                          })
+                          .select('party');
+
+    return account
+  } catch (error) {
+    throw error
+  }
+}
 
 /**
  * Creates an Account with three starter monsters
@@ -15,6 +59,9 @@ export async function createAccount(request: CreateAccountRequest): Promise<Crea
   session.startTransaction();
 
   try {
+    debugger
+    const usedSession = config.environment === 'production' ? session : null
+
     const accounts = await Account.find({ userId: request.userId }).count();
     if (accounts >= 3) {
       throw 'User has maximized account pool'
@@ -39,7 +86,7 @@ export async function createAccount(request: CreateAccountRequest): Promise<Crea
 
     // save the base account
     const savedAccount = new Account(account);
-    await savedAccount.save();
+    await savedAccount.save({ session: usedSession });
 
     // base monster model
     const baseMonster: IDetailedMonster = {
@@ -61,10 +108,12 @@ export async function createAccount(request: CreateAccountRequest): Promise<Crea
       });
     })
 
-    const updatedAccount = await Account.updateOne({ _id: savedAccount._id }, { $set: { party: selectedMonsters } })
+    const savedMonsters = await DetailedMonster.insertMany(selectedMonsters, { session: usedSession });
+
+    await Account.updateOne({ _id: savedAccount._id }, { $set: { party: savedMonsters.map(sm => sm._id) } }, { session: usedSession } )
 
     return {
-      accountId: updatedAccount.upsertedId.toString()
+      accountId: savedAccount.id
     }
   } catch (error) {
     session.abortTransaction();
