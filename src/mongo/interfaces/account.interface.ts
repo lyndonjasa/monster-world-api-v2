@@ -1,12 +1,12 @@
 import { Document } from "mongoose";
-import { IMonsterDocument } from ".";
+import { IDetailedMonsterDocument } from ".";
 
 export interface IAccount {
   userId: string;
   accountName: string;
   currency: number;
   unlockedMonsters: string[];
-  party?: IMonsterDocument[]; 
+  party?: IDetailedMonsterDocument[] | string[]; 
 }
 
 export interface IAccountDocument extends IAccount, Document {}

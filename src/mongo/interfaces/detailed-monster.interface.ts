@@ -7,7 +7,7 @@ export interface IDetailedMonster {
   currentExp: number;
   talents: string[];
   talentPoints: number;
-  monster?: IMonsterDocument;
+  monster?: IMonsterDocument | string;
 }
 
 export interface IDetailedMonsterDocument extends IDetailedMonster, Document {}
