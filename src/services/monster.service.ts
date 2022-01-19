@@ -1,9 +1,14 @@
+import { Types } from "mongoose";
+import { convertToDetailedMonsterResponse } from "../helpers/monster.helper";
 import { convertToNumberElement } from "../helpers/skill.helper";
 import { MonsterModel } from "../models/core/monster.model";
 import { UploadMonsterRequest } from "../models/requests/upload-monster.request";
 import { UploadSpriteRequest } from "../models/requests/upload-sprite.request";
+import { DetailedMonsterResponse } from "../models/responses/detailed-monster.response";
 import { StarterGroupResponse } from "../models/responses/starter-group.response";
+import { IDetailedMonster, IDetailedMonsterDocument } from "../mongo/interfaces";
 import { IMonsterDocument } from "../mongo/interfaces/monster.interface";
+import { DetailedMonster } from "../mongo/models";
 import Monster from "../mongo/models/monster";
 import Skill from "../mongo/models/skill";
 import { EvolutionEnum, starterGroups } from "../shared/constants";
@@ -144,6 +149,61 @@ export async function getStarterGroups(): Promise<StarterGroupResponse[]> {
     })
 
     return groups;
+  } catch (error) {
+    throw error
+  }
+}
+
+/**
+ * Add Requested Monsters to Account
+ * @param accountId Account Id
+ * @param request request monster ids
+ */
+export async function addMonsterToAccount(accountId: string, request: string[]): Promise<IDetailedMonsterDocument[]> {
+  try {
+    // base monster model
+    const baseMonster: IDetailedMonster = {
+      accountId: new Types.ObjectId(accountId),
+      currentExp: 0,
+      level: 1,
+      talentPoints: 1,
+      talents: [],
+      cardBonus: 0
+    }
+
+    const ids = request.map(r => new Types.ObjectId(r));
+    const monsterDocuments = await Monster.find({ _id: { $in: ids } })
+
+    const monsters: IDetailedMonster[] = [];
+    monsterDocuments.forEach(md => {
+      monsters.push({
+        ...baseMonster,
+        monster: md.id
+      });
+    })
+
+    const result = await DetailedMonster.insertMany(monsters);
+    
+    return result;
+  } catch (error) {
+    throw error
+  }
+}
+
+/**
+ * Fetches all monsters owned by the account
+ * @param accountId Account Id
+ */
+export async function getAccountMonsters(accountId: string): Promise<DetailedMonsterResponse[]> {
+  try {
+    const id = new Types.ObjectId(accountId);
+
+    const documents = await DetailedMonster.find({ accountId: id })
+                            .populate('monster', '-evolution -__v -skills -sprite');
+
+    const monsters = documents.map(d => convertToDetailedMonsterResponse(d))
+
+    return monsters;
   } catch (error) {
     throw error
   }

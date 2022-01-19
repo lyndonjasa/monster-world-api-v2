@@ -1,3 +1,4 @@
+import { convertToDetailedMonsterResponse } from "../helpers/monster.helper";
 import { calculateStats } from "../helpers/stat.helper";
 import { AccountModel } from "../models/core/account.model";
 import { CreateAccountRequest } from "../models/requests";
@@ -74,20 +75,7 @@ export async function getAccountParty(id: string): Promise<DetailedMonsterRespon
 
     const monsterParty: DetailedMonsterResponse[] = [];
     (account.party as IDetailedMonsterDocument[]).forEach(dm => {
-      const m = dm.monster as IMonsterDocument;
-
-      const monster: DetailedMonsterResponse = {
-        _id: dm.id,
-        currentExp: dm.currentExp,
-        element: m.element,
-        expToLevel: 10, // TODO: replace this with actual value from exp table
-        level: dm.level,
-        name: m.name,
-        skills: m.skills as ISkillDocument[],
-        sprite: m.sprite,
-        talents: dm.talents,
-        stats: calculateStats(m.baseStats, m.statGain, dm.level, dm.talents, dm.cardBonus, EvolutionEnum[m.stage])
-      }
+      const monster: DetailedMonsterResponse = convertToDetailedMonsterResponse(dm);
 
       monsterParty.push(monster);
     })
