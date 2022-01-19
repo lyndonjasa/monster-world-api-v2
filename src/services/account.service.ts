@@ -6,7 +6,7 @@ import { DetailedMonsterResponse } from "../models/responses/detailed-monster.re
 import { IAccountDocument, IDetailedMonster, IDetailedMonsterDocument, IMonsterDocument, ISkill, ISkillDocument } from "../mongo/interfaces";
 import { Account, DetailedMonster, Monster } from "../mongo/models";
 import config from "../shared/config";
-import { evolutionStages, starterGroups } from "../shared/constants";
+import { EvolutionEnum, starterGroups } from "../shared/constants";
 
 /**
  * Get Account Details by Id
@@ -66,7 +66,7 @@ export async function getAccountParty(id: string): Promise<DetailedMonsterRespon
         skills: m.skills as ISkillDocument[],
         sprite: m.sprite,
         talents: dm.talents,
-        stats: calculateStats(m.baseStats, m.statGain, dm.level, dm.talents)
+        stats: calculateStats(m.baseStats, m.statGain, dm.level, dm.talents, dm.cardBonus, EvolutionEnum[m.stage])
       }
 
       monsterParty.push(monster);
@@ -123,11 +123,12 @@ export async function createAccount(request: CreateAccountRequest): Promise<Crea
       currentExp: 0,
       level: 1,
       talentPoints: 1,
-      talents: []
+      talents: [],
+      cardBonus: 0
     }
 
     // get monter details of the selected group
-    const monsterDocuments = await Monster.find({ stage: evolutionStages.ROOKIE, name: { $in: rookies.monsters.map(m => m) } });
+    const monsterDocuments = await Monster.find({ stage: EvolutionEnum.ROOKIE, name: { $in: rookies.monsters.map(m => m) } });
 
     const selectedMonsters: IDetailedMonster[] = [];
     monsterDocuments.forEach(md => {

@@ -8,8 +8,8 @@ export class StatsModel implements IStats {
   speed: number;
   critRate: number;
   critDamage: number;
-  maxMana: number;
-  maxHealth: number;
+  maxMana?: number;
+  maxHealth?: number;
   healthRegen: number;
   manaRegen: number;
 }

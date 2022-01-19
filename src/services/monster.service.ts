@@ -6,7 +6,7 @@ import { StarterGroupResponse } from "../models/responses/starter-group.response
 import { IMonsterDocument } from "../mongo/interfaces/monster.interface";
 import Monster from "../mongo/models/monster";
 import Skill from "../mongo/models/skill";
-import { evolutionStages, starterGroups } from "../shared/constants";
+import { EvolutionEnum, starterGroups } from "../shared/constants";
 
 /**
  * Get All Monsters
@@ -127,7 +127,7 @@ export async function uploadMonsterSprites(request: UploadSpriteRequest[]): Prom
  */
 export async function getStarterGroups(): Promise<StarterGroupResponse[]> {
   try {
-    const rookies = await Monster.find({ stage: evolutionStages.ROOKIE })
+    const rookies = await Monster.find({ stage: EvolutionEnum.ROOKIE })
                             .select('name element -_id');
 
     const groups: StarterGroupResponse[] = [];

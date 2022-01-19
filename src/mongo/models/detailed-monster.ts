@@ -13,7 +13,8 @@ const schema = new Schema({
   monster: {
     type: Types.ObjectId,
     ref: 'Monster'
-  }
+  },
+  cardBonus: Number
 })
 
 const DetailedMonster = model<IDetailedMonsterDocument>('DetailedMonster', schema, 'detailed-monsters');

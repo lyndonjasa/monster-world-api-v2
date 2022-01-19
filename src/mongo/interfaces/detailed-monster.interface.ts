@@ -8,6 +8,7 @@ export interface IDetailedMonster {
   talents: string[];
   talentPoints: number;
   monster?: IMonsterDocument | Types.ObjectId;
+  cardBonus: number;
 }
 
 export interface IDetailedMonsterDocument extends IDetailedMonster, Document {}
