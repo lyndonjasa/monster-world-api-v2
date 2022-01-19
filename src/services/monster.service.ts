@@ -175,10 +175,11 @@ export async function addMonsterToAccount(accountId: string, request: string[]):
     const monsterDocuments = await Monster.find({ _id: { $in: ids } })
 
     const monsters: IDetailedMonster[] = [];
-    monsterDocuments.forEach(md => {
+    request.forEach(r => {
+      const document = monsterDocuments.find(d => d.id == r)
       monsters.push({
         ...baseMonster,
-        monster: md.id
+        monster: document._id
       });
     })
 
