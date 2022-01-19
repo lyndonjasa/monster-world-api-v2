@@ -1,7 +1,7 @@
 import { calculateStats } from "../helpers/stat.helper";
 import { AccountModel } from "../models/core/account.model";
 import { CreateAccountRequest } from "../models/requests";
-import { CreateAccountResponse } from "../models/responses";
+import { CreateAccountResponse, ErrorResponse } from "../models/responses";
 import { DetailedMonsterResponse } from "../models/responses/detailed-monster.response";
 import { IAccountDocument, IDetailedMonster, IDetailedMonsterDocument, IMonsterDocument, ISkill, ISkillDocument } from "../mongo/interfaces";
 import { Account, DetailedMonster, Monster } from "../mongo/models";
@@ -25,6 +25,26 @@ export async function getAccount(id: string): Promise<IAccountDocument> {
                           });
 
     return account
+  } catch (error) {
+    throw error
+  }
+}
+
+/**
+ * backdoor functionality for adding 200k currency
+ * @param id accountId
+ */
+export async function addCurrency(id: string): Promise<IAccountDocument> {
+  try {
+    const account = await Account.findById(id);
+    if (!account) {
+      throw { errorCode: 404, errorMessage: 'Account not found' } as ErrorResponse
+    }
+
+    account.currency += 200000;
+    await account.save();
+
+    return account;
   } catch (error) {
     throw error
   }

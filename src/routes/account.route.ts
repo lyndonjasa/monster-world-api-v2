@@ -1,6 +1,6 @@
 import express from 'express'
 import { CreateAccountRequest } from '../models/requests';
-import { createAccount, getAccount, getAccountParty } from '../services/account.service';
+import { addCurrency, createAccount, getAccount, getAccountParty } from '../services/account.service';
 
 const AccountRouter = express.Router();
 
@@ -37,6 +37,24 @@ AccountRouter.get('/accounts/:id', async (req, res) => {
     }
   } catch (error) {
     res.status(500).send(error);
+  }
+})
+
+/**
+ * Retrieve the account associated to the id
+ */
+ AccountRouter.put('/accounts/:id/currency', async (req, res) => {
+  try {
+    const accountId = req.params.id
+    const account = await addCurrency(accountId);
+
+    res.send(account);
+  } catch (error) {
+    if (error.errorCode) {
+      res.status(error.errorCode).send(error);
+    } else {
+      res.status(500).send(error);
+    }
   }
 })
 
