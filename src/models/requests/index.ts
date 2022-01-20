@@ -9,6 +9,7 @@ import { UploadMonsterRequest } from "./upload-monster.request";
 import { UploadSkillRequest } from "./upload-skill.request";
 import { UploadSpriteRequest } from "./upload-sprite.request";
 import { UploadTalentRequest } from "./upload-talent.request";
+import { ItemRequest, BuyItemRequest } from "./buy-item.request";
 
 export {
   CreateAccountRequest,
@@ -22,4 +23,6 @@ export {
   UploadSkillRequest,
   UploadSpriteRequest,
   UploadTalentRequest,
+  BuyItemRequest,
+  ItemRequest
 }
