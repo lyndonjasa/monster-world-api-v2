@@ -116,9 +116,10 @@ export async function createAccount(request: CreateAccountRequest): Promise<Crea
     // base account model
     const account: AccountModel = {
       accountName: request.accountName,
-      currency: 0,
+      currency: 1000, // starting currency of 1000
       unlockedMonsters: rookies.monsters.map(m => m),
       userId: request.userId,
+      inventory: []
     }
 
     // save the base account
