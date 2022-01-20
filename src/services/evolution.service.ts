@@ -32,7 +32,7 @@ export async function uploadEvolutions(request: UploadEvolutionRequest[]): Promi
     request.forEach(r => {
       evolutions.push({
         baseExp: r.exp,
-        baseLevel: r.level,
+        levelCap: r.level,
         currency: {
           base: r.currency,
           increment: r.currencyIncrement

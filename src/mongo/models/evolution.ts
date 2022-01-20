@@ -8,7 +8,7 @@ const schema = new Schema({
     increment: Number
   },
   baseExp: Number,
-  baseLevel: Number,
+  levelCap: Number,
   catchRate: Number,
   cardPrerequisite: Number,
   maxCardBonus: Number

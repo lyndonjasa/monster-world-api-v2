@@ -10,5 +10,5 @@ export class EvolutionModel implements IEvolution {
     increment: number; 
   }
   baseExp: number;
-  baseLevel: number;
+  levelCap: number;
 }

@@ -7,7 +7,7 @@ export interface IEvolution {
     increment: number;
   }
   baseExp: number;
-  baseLevel: number;
+  levelCap: number;
   catchRate: number;
   cardPrerequisite: number;
   maxCardBonus: number;
