@@ -17,11 +17,8 @@ const schema = new Schema({
   ],
   inventory: [
     {
-      item: {
-        type: Types.ObjectId,
-        ref: 'Item'
-      },
-      quantity: Number
+      type: Types.ObjectId,
+      ref: 'Item'
     }
   ]
 })

@@ -87,7 +87,7 @@ export async function buyItems(request: BuyItemRequest): Promise<BuyItemResponse
     }
 
     const itemResponses: ItemResponse[] = [];
-    const inventoryDocuments: { item: Types.ObjectId, quantity: number }[] = [];
+    const inventoryItemIds: Types.ObjectId[] = [];
 
     let totalRequestedAmount = 0;
 
@@ -100,10 +100,9 @@ export async function buyItems(request: BuyItemRequest): Promise<BuyItemResponse
         quantity: i.quantity
       });
 
-      inventoryDocuments.push({
-        item: relatedDocument._id,
-        quantity: i.quantity
-      });
+      for (let index = 0; index < i.quantity; index++) {
+        inventoryItemIds.push(new Types.ObjectId(i.itemId));
+      }
     })
     
     // validate account currency
@@ -111,17 +110,17 @@ export async function buyItems(request: BuyItemRequest): Promise<BuyItemResponse
       throw { errorCode: 400, errorMessage: 'Account currency insufficient' } as ErrorResponse
     }
 
-    const updatedAccount = await Account.updateOne({ _id: new Types.ObjectId(request.accountId) }, 
-                                                      {
-                                                        $inc: {
-                                                          currency: -totalRequestedAmount
-                                                        },
-                                                        $push: {
-                                                          inventory: {
-                                                            $each: inventoryDocuments
-                                                          }
-                                                        }
-                                                      })
+    await Account.updateOne({ _id: new Types.ObjectId(request.accountId) }, 
+                              {
+                                $inc: {
+                                  currency: -totalRequestedAmount
+                                },
+                                $push: {
+                                  inventory: {
+                                    $each: inventoryItemIds
+                                  }
+                                }
+                              })
 
     return {
       accountId: request.accountId,
