@@ -14,6 +14,15 @@ const schema = new Schema({
       type: Types.ObjectId,
       ref: 'DetailedMonster'
     }
+  ],
+  inventory: [
+    {
+      item: {
+        type: Types.ObjectId,
+        ref: 'Item'
+      },
+      quantity: Number
+    }
   ]
 })
 

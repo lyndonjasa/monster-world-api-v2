@@ -80,29 +80,48 @@ export async function buyItems(request: BuyItemRequest): Promise<BuyItemResponse
     const itemIds = request.items.map(i => new Types.ObjectId(i.itemId));
     const requestedItems = await Item.find({ _id: { $in: itemIds } });
 
-    // validate account currency
-    const totalRequiredAmount = requestedItems.map(ri => ri.cost).reduce((a, b) => a + b, 0);
-    if (totalRequiredAmount > account.currency) {
-      throw { errorCode: 400, errorMessage: 'Account does not have enough currency' } as ErrorResponse
-    }
-
     // check if there is an invalid item on the request
-    const itemDifference = itemIds.filter(i => !requestedItems.map(ri => ri._id).includes(i))
+    const itemDifference = itemIds.filter(i => !requestedItems.map(ri => ri.id).includes(i.toString()))
     if (itemDifference.length > 0) {
       throw { errorCode: 500, errorMessage: 'Unknown Item Found on request' } as ErrorResponse
     }
 
-    // TODO: add updating of account here
-
     const itemResponses: ItemResponse[] = [];
+    const inventoryDocuments: { item: Types.ObjectId, quantity: number }[] = [];
+
+    let totalRequestedAmount = 0;
+
     request.items.forEach(i => {
       const relatedDocument = requestedItems.find(ri => ri.id == i.itemId)
+      totalRequestedAmount += relatedDocument.cost * i.quantity
 
       itemResponses.push({
         item: relatedDocument.name,
         quantity: i.quantity
       });
+
+      inventoryDocuments.push({
+        item: relatedDocument._id,
+        quantity: i.quantity
+      });
     })
+    
+    // validate account currency
+    if (totalRequestedAmount > account.currency) {
+      throw { errorCode: 400, errorMessage: 'Account currency insufficient' } as ErrorResponse
+    }
+
+    const updatedAccount = await Account.updateOne({ _id: new Types.ObjectId(request.accountId) }, 
+                                                      {
+                                                        $inc: {
+                                                          currency: -totalRequestedAmount
+                                                        },
+                                                        $push: {
+                                                          inventory: {
+                                                            $each: inventoryDocuments
+                                                          }
+                                                        }
+                                                      })
 
     return {
       accountId: request.accountId,
