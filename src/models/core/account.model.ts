@@ -1,4 +1,4 @@
-import { IAccount, IDetailedMonsterDocument } from "../../mongo/interfaces";
+import { IAccount, IAccountItems, IDetailedMonsterDocument } from "../../mongo/interfaces";
 
 export class AccountModel implements IAccount {
   userId: string;
@@ -6,4 +6,5 @@ export class AccountModel implements IAccount {
   currency: number;
   unlockedMonsters: string[];
   party?: IDetailedMonsterDocument[] | string[];
+  inventory?: IAccountItems[];
 }
