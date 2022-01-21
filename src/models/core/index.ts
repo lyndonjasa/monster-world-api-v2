@@ -9,6 +9,7 @@ import { SpriteModel } from "./sprite.model";
 import { TalentModel } from "./talent.model";
 import { IUserRequestPayload } from "./user-request.payload";
 import { StatsModel } from "./stats.model";
+import { InventoryItemModel } from "./inventory-item.model";
 
 export {
   DictionaryModel,
@@ -21,5 +22,6 @@ export {
   SpriteModel,
   TalentModel,
   IUserRequestPayload,
-  StatsModel
+  StatsModel,
+  InventoryItemModel
 }

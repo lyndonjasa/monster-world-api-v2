@@ -1,6 +1,7 @@
 import express from 'express'
 import { CreateAccountRequest } from '../models/requests';
 import { addCurrency, createAccount, getAccount, getAccountParty } from '../services/account.service';
+import { getAccountInventory } from '../services/item.service';
 import { addMonsterToAccount, getAccountMonsters } from '../services/monster.service';
 
 const AccountRouter = express.Router();
@@ -56,6 +57,39 @@ AccountRouter.get('/accounts/:id', async (req, res) => {
 })
 
 /**
+ * Create an account
+ */
+ AccountRouter.post('/accounts', async (req, res) => {
+  try {
+    const request = req.body as CreateAccountRequest;
+    const account = await createAccount(request);
+
+    res.send(account);
+  } catch (error) {
+    res.status(500).send(error)
+  }
+});
+
+/**
+ * Retrive the Account Inventory
+ */
+AccountRouter.get('/accounts/:id/inventory', async (req, res) => {
+  try {
+    const accountId = req.params.id
+    const inventory = await getAccountInventory(accountId);
+
+    res.send(inventory);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+})
+
+
+
+
+//#region BACKDOOR ROUTES
+
+/**
  * Backdoor Route to add currency
  */
  AccountRouter.put('/accounts/:id/currency', async (req, res) => {
@@ -93,18 +127,7 @@ AccountRouter.get('/accounts/:id', async (req, res) => {
   }
 })
 
-/**
- * Create an account
- */
-AccountRouter.post('/accounts', async (req, res) => {
-  try {
-    const request = req.body as CreateAccountRequest;
-    const account = await createAccount(request);
+//#endregion BACKDOOR ROUTES
 
-    res.send(account);
-  } catch (error) {
-    res.status(500).send(error)
-  }
-});
 
 export default AccountRouter;

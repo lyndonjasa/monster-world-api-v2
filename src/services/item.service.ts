@@ -1,4 +1,5 @@
 import { Types } from "mongoose";
+import { InventoryItemModel } from "../models/core";
 import { ItemModel } from "../models/core/item.model";
 import { BuyItemRequest } from "../models/requests";
 import { UploadItemRequest } from "../models/requests/upload-item.request";
@@ -126,6 +127,57 @@ export async function buyItems(request: BuyItemRequest): Promise<BuyItemResponse
       accountId: request.accountId,
       items: itemResponses
     }
+  } catch (error) {
+    throw error
+  }
+}
+
+/**
+ * Get Inventory Items related to the Account
+ * @param accountId Account Id
+ */
+export async function getAccountInventory(accountId: string): Promise<ItemResponse[]> {
+  try {
+    const id = new Types.ObjectId(accountId)
+
+    const aggregationQuery = [
+      { // match stage
+        $match: {
+          _id: id
+        },
+      },
+      { // projection stage
+        $project: {
+          inventory: 1,
+          _id: 0
+        }
+      },
+      { // unwind
+        $unwind: "$inventory"
+      },
+      { // group
+        $group: {
+          _id: "$inventory",
+          count: { $sum: 1 }
+        }
+      }
+    ]
+
+    const inventoryItems: InventoryItemModel[] = await Account.aggregate(aggregationQuery);
+    const itemDocuments = await Item.find({ _id: { $in: inventoryItems.map(ii => ii._id) } });
+
+    const inventory: ItemResponse[] = [];
+    inventoryItems.forEach(ii => {
+      console.log(ii._id.toString());
+      const itemDocument = itemDocuments.find(i => i._id.toString() == ii._id.toString())
+
+      inventory.push({
+        item: itemDocument.name,
+        quantity: ii.count
+      });
+    })
+
+    return inventory;
   } catch (error) {
     throw error
   }
