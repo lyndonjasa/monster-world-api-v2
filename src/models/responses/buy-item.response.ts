@@ -1,5 +1,6 @@
 export interface ItemResponse {
   item: string;
+  itemId?: string;
   quantity: number;
 }
 

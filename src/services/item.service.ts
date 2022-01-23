@@ -168,11 +168,11 @@ export async function getAccountInventory(accountId: string): Promise<ItemRespon
 
     const inventory: ItemResponse[] = [];
     inventoryItems.forEach(ii => {
-      console.log(ii._id.toString());
       const itemDocument = itemDocuments.find(i => i._id.toString() == ii._id.toString())
 
       inventory.push({
         item: itemDocument.name,
+        itemId: itemDocument.id,
         quantity: ii.count
       });
     })
