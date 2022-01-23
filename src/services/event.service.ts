@@ -62,10 +62,6 @@ export async function tameMonster(request: TameActionRequest): Promise<TameActio
 
     if (success) {
       response.success = true;
-      // add to account's unlocked list
-      if (!account.unlockedMonsters.some(um => um == requestedMonster.name)) {
-        await Account.findByIdAndUpdate(request.accountId, { $push: { unlockedMonsters: requestedMonster.name } }, { session: usedSession })
-      }
 
       const tamedMonster = await addMonsterToAccount(request.accountId, [request.monsterId]);
       response.detailedMonsterId = tamedMonster[0].id
