@@ -10,6 +10,7 @@ import { UploadSkillRequest } from "./upload-skill.request";
 import { UploadSpriteRequest } from "./upload-sprite.request";
 import { UploadTalentRequest } from "./upload-talent.request";
 import { ItemRequest, BuyItemRequest } from "./buy-item.request";
+import { TameActionRequest } from "./tame-action.request";
 
 export {
   CreateAccountRequest,
@@ -24,5 +25,6 @@ export {
   UploadSpriteRequest,
   UploadTalentRequest,
   BuyItemRequest,
-  ItemRequest
+  ItemRequest,
+  TameActionRequest
 }
