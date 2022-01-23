@@ -1,5 +1,6 @@
 import { StatsModel } from "../models/core";
 import { IStats } from "../mongo/interfaces";
+import config from "../shared/config";
 import { EvolutionEnum, TalentEnum } from "../shared/constants";
 
 /**
@@ -125,4 +126,14 @@ const applyTalentBonuses = (stats: StatsModel, talents: string[]) => {
   if (talents.includes(TalentEnum.FLASH)) {
     stats.speed += (stats.speed * 0.2)
   }
+}
+
+/**
+ * Returns a bonus catch rate based on the amount of monsters unlocked
+ * @param unlockedMonsterCount Current Number of Unlocked Monsters of the Account
+ */
+export function getBonusCatchRate(unlockedMonsterCount: number) {
+  const bonus = Math.floor(unlockedMonsterCount / 5)
+
+  return bonus <= config.maxBonusCatchRate ? bonus : config.maxBonusCatchRate;
 }
