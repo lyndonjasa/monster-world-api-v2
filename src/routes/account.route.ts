@@ -1,6 +1,6 @@
 import express from 'express'
 import { CreateAccountRequest } from '../models/requests';
-import { addCurrency, createAccount, getAccount, getAccountParty } from '../services/account.service';
+import { addCurrency, createAccount, getAccount, getAccountMonster, getAccountParty } from '../services/account.service';
 import { getAccountInventory } from '../services/item.service';
 import { addMonsterToAccount, getAccountMonsters } from '../services/monster.service';
 
@@ -51,6 +51,21 @@ AccountRouter.get('/accounts/:id', async (req, res) => {
     const monsters = await getAccountMonsters(accountId);
 
     res.send(monsters);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+})
+
+/**
+ * Retrieve a monster by its monster id
+ */
+ AccountRouter.get('/accounts/:id/monsters/:monsterId', async (req, res) => {
+  try {
+    const accountId = req.params.id
+    const monsterId = req.params.monsterId
+    const monster = await getAccountMonster(monsterId, accountId);
+
+    res.send(monster);
   } catch (error) {
     res.status(500).send(error);
   }

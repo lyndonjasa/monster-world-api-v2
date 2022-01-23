@@ -1,5 +1,6 @@
+import { Types } from "mongoose";
+import { throwError } from "../helpers/error.helper";
 import { convertToDetailedMonsterResponse } from "../helpers/monster.helper";
-import { calculateStats } from "../helpers/stat.helper";
 import { AccountModel } from "../models/core/account.model";
 import { CreateAccountRequest } from "../models/requests";
 import { CreateAccountResponse, ErrorResponse } from "../models/responses";
@@ -159,5 +160,32 @@ export async function createAccount(request: CreateAccountRequest): Promise<Crea
     throw error;
   } finally {
     session.endSession();
+  }
+}
+
+/**
+ * Get Details of a Monster owned by the Account
+ * @param monsterId Monster Id
+ * @param accountId Account Id
+ */
+export async function getAccountMonster(monsterId: string, accountId: string): Promise<DetailedMonsterResponse> {
+  try {
+    const monster = await DetailedMonster
+                            .findOne({ _id: new Types.ObjectId(monsterId), accountId: new Types.ObjectId(accountId) })
+                            .populate({
+                              path: 'monster',
+                              select: '-sprite',
+                              populate: {
+                                path: 'skills',
+                                select: '-_id -__v'
+                              }
+                            });
+    if (!monster) {
+      throwError(400, 'Monster not found');
+    }
+
+    return convertToDetailedMonsterResponse(monster);
+  } catch (error) {
+    throw error
   }
 }

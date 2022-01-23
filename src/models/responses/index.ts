@@ -4,6 +4,7 @@ import { LoginResponse } from "./login.response";
 import { StarterGroupResponse } from "./starter-group.response";
 import { BuyItemResponse, ItemResponse } from "./buy-item.response";
 import { TameActionResponse } from "./tame-action.response";
+import { DetailedMonsterResponse } from "./detailed-monster.response";
 
 export {
   CreateAccountResponse,
@@ -12,5 +13,6 @@ export {
   StarterGroupResponse,
   BuyItemResponse,
   ItemResponse,
-  TameActionResponse
+  TameActionResponse,
+  DetailedMonsterResponse
 }
