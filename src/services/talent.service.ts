@@ -37,7 +37,8 @@ export async function uploadTalents(request: UploadTalentRequest[]): Promise<ITa
         description: r.description,
         category: parseCategory(r.category),
         type: parseTalentType(r.type),
-        points: r.points
+        points: r.points,
+        prerequisite: r.prerequisite.trim() !== '' ? r.prerequisite : undefined
       });
     })
 

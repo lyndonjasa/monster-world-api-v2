@@ -6,4 +6,5 @@ export class TalentModel implements ITalent {
   category: number;
   type: number;
   points: number;
+  prerequisite?: string;
 }

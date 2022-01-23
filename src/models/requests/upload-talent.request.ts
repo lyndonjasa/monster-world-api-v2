@@ -4,4 +4,5 @@ export class UploadTalentRequest {
   description: string;
   points: number;
   type: string;
+  prerequisite: string;
 }

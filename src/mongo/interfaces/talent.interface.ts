@@ -6,6 +6,7 @@ export interface ITalent {
   category: number;
   type: number;
   points: number;
+  prerequisite?: string;
 }
 
 export interface ITalentDocument extends ITalent, Document {}

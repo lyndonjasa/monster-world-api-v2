@@ -6,7 +6,8 @@ const schema = new Schema({
   description: String,
   category: Number,
   type: Number,
-  points: Number
+  points: Number,
+  prerequisite: String
 })
 
 const Talent = model<ITalentDocument>('Talent', schema, 'talents');
