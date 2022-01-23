@@ -7,6 +7,7 @@ export class DetailedMonsterResponse {
   currentExp: number;
   expToLevel: number;
   talents: string[];
+  talentPoints: number;
   name: string;
   stats: StatsModel;
   sprite: ISprite;
