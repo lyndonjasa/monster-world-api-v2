@@ -96,7 +96,6 @@ export async function createAccount(request: CreateAccountRequest): Promise<Crea
   session.startTransaction();
 
   try {
-    debugger
     const usedSession = config.environment === 'production' ? session : null
 
     const accounts = await Account.find({ userId: request.userId }).count();

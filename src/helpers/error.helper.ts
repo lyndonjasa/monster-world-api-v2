@@ -1,4 +1,5 @@
 import { Response } from "express";
+import { ErrorResponse } from "../models/responses";
 
 /**
  * Generic class for posting error
@@ -11,4 +12,13 @@ export function sendError(res: Response, error: any): void {
   } else {
     res.status(500).send(error);
   }
+}
+
+/**
+ * Wrapper function for throwing error 
+ * @param code Error Code
+ * @param message Error Message
+ */
+export function throwError(errorCode: number, errorMessage: string): void {
+  throw { errorCode, errorMessage } as ErrorResponse
 }

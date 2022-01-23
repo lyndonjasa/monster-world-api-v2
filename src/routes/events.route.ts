@@ -1,6 +1,6 @@
 import express from 'express'
 import { sendError } from '../helpers/error.helper';
-import { ErrorResponse } from '../models/responses';
+import { TameActionRequest } from '../models/requests';
 
 const EventRouter = express.Router();
 
@@ -9,7 +9,7 @@ const EventRouter = express.Router();
  */
 EventRouter.post('/events/tame', async (req, res) => {
   try {
-    throw { errorCode: 400, errorMessage: 'invalid object' } as ErrorResponse
+    const request = req.body as TameActionRequest;
   } catch (error) {
     sendError(res, error);
   }
