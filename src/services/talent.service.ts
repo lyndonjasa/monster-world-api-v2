@@ -1,8 +1,9 @@
+import { Types } from "mongoose";
 import { parseCategory, parseTalentType } from "../helpers/talent.helper";
 import { TalentModel } from "../models/core/talent.model";
-import { UploadTalentRequest } from "../models/requests/upload-talent.request";
-import { ITalent, ITalentDocument } from "../mongo/interfaces/talent.interface";
-import Talent from "../mongo/models/talent"
+import { BackdoorTalentRequest, UploadTalentRequest } from "../models/requests";
+import { ITalentDocument } from "../mongo/interfaces/talent.interface";
+import { DetailedMonster, Talent } from "../mongo/models";
 
 /**
  * Get Talents available on the database
@@ -49,5 +50,18 @@ export async function uploadTalents(request: UploadTalentRequest[]): Promise<ITa
     throw error
   } finally {
     session.endSession();
+  }
+}
+
+/**
+ * Backdoor for Adding Talent Points
+ * @param request 
+ */
+export async function addTalentPoints(request: BackdoorTalentRequest): Promise<void> {
+  try {
+    const monsterIds = request.monsters.map(m => new Types.ObjectId(m));
+    await DetailedMonster.updateMany({ _id: { $in: monsterIds } }, { $inc: { talentPoints: request.points } })
+  } catch (error) {
+    throw error
   }
 }
