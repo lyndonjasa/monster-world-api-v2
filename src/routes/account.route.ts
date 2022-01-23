@@ -1,4 +1,5 @@
 import express from 'express'
+import { sendError } from '../helpers/error.helper';
 import { CreateAccountRequest } from '../models/requests';
 import { addCurrency, createAccount, getAccount, getAccountMonster, getAccountParty } from '../services/account.service';
 import { getAccountInventory } from '../services/item.service';
@@ -32,13 +33,9 @@ AccountRouter.get('/accounts/:id', async (req, res) => {
     const accountId = req.params.id
     const account = await getAccountParty(accountId);
 
-    if (!account) {
-      res.status(404).send()
-    } else {
-      res.send(account);
-    }
+    res.send(account)
   } catch (error) {
-    res.status(500).send(error);
+    sendError(res, error)
   }
 })
 

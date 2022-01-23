@@ -29,6 +29,7 @@ export const uploadSkills = async (request: UploadSkillRequest[]) => {
     const skill: SkillModel = {
       cost: r.cost,
       ignoreDefense: Boolean(r.ignoreDefense),
+      description: r.description,
       name: r.skill,
       power: r.power,
       skillElement: convertToNumberElement(r.element),

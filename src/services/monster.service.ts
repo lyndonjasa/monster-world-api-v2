@@ -1,4 +1,5 @@
 import { Types } from "mongoose";
+import { throwError } from "../helpers/error.helper";
 import { convertToDetailedMonsterResponse } from "../helpers/monster.helper";
 import { convertToNumberElement } from "../helpers/skill.helper";
 import { MonsterModel } from "../models/core/monster.model";
@@ -8,7 +9,7 @@ import { DetailedMonsterResponse } from "../models/responses/detailed-monster.re
 import { StarterGroupResponse } from "../models/responses/starter-group.response";
 import { IDetailedMonster, IDetailedMonsterDocument } from "../mongo/interfaces";
 import { IMonsterDocument } from "../mongo/interfaces/monster.interface";
-import { DetailedMonster } from "../mongo/models";
+import { Account, DetailedMonster } from "../mongo/models";
 import Monster from "../mongo/models/monster";
 import Skill from "../mongo/models/skill";
 import { EvolutionEnum, starterGroups } from "../shared/constants";
@@ -184,6 +185,17 @@ export async function addMonsterToAccount(accountId: string, request: string[]):
     })
 
     const result = await DetailedMonster.insertMany(monsters);
+
+    // add to account's unlocked list
+    const account = await Account.findById(accountId);
+    if (!account) {
+      throwError(400, 'Invalid Account');
+    }
+
+    const unlistedMonsters = monsterDocuments.map(md => md.name).filter(md => !account.unlockedMonsters.includes(md))
+    if (unlistedMonsters.length > 0) {
+      await Account.findByIdAndUpdate(accountId, { $push: { unlockedMonsters: { $each: unlistedMonsters } } })
+    }
     
     return result;
   } catch (error) {

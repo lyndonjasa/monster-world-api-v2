@@ -73,6 +73,10 @@ export async function getAccountParty(id: string): Promise<DetailedMonsterRespon
                             }
                           })
                           .select('party');
+    
+    if (!account) {
+      throwError(400, 'Account not found')
+    }
 
     const monsterParty: DetailedMonsterResponse[] = [];
     (account.party as IDetailedMonsterDocument[]).forEach(dm => {

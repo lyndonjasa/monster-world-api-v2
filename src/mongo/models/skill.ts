@@ -9,6 +9,7 @@ const schema = new Schema({
   ignoreDefense: Boolean,
   skillTarget: Number,
   skillElement: Number,
+  description: String,
   penalty: {
     damagePercentage: Number,
     target: Number,

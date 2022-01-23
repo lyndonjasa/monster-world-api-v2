@@ -8,6 +8,7 @@ export class SkillModel implements ISkill {
   ignoreDefense: boolean;
   skillTarget: number;
   skillElement: number;
+  description: string;
   penalty?: {
     damagePercentage: number;
     target: number;
