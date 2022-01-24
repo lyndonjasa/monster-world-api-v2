@@ -14,7 +14,7 @@ export function convertToDetailedMonsterResponse(document: IDetailedMonsterDocum
     expToLevel: 10, // TODO: replace this with actual value from exp table
     level: document.level,
     name: m.name + bonusIndicator,
-    skills: m.skills as ISkillDocument[],
+    skills: m.skills ? m.skills as ISkillDocument[] : undefined,
     sprite: m.sprite,
     talents: document.talents,
     talentPoints: document.talentPoints,

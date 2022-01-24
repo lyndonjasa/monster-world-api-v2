@@ -4,6 +4,7 @@ import { CreateAccountRequest } from '../models/requests';
 import { addCurrency, createAccount, getAccount, getAccountMonster, getAccountParty } from '../services/account.service';
 import { getAccountInventory } from '../services/item.service';
 import { addMonsterToAccount, getAccountMonsters } from '../services/monster.service';
+import { addTalents } from '../services/talent.service';
 
 const AccountRouter = express.Router();
 
@@ -96,7 +97,22 @@ AccountRouter.get('/accounts/:id/inventory', async (req, res) => {
   }
 })
 
+/**
+ * Update the Monster's Talents
+ */
+AccountRouter.put('/accounts/:accountId/monsters/:monsterId/talents', async (req, res) => {
+  try {
+    const accountId = req.params.accountId;
+    const monsterId = req.params.monsterId;
+    const talents = req.body as string[];
 
+    const monster = await addTalents(accountId, monsterId, talents);
+
+    res.send(monster);
+  } catch (error) {
+    sendError(res, error);
+  }
+})
 
 
 //#region BACKDOOR ROUTES
