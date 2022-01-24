@@ -2,7 +2,7 @@ import express from 'express'
 import { sendError } from '../helpers/error.helper';
 import { CreateAccountRequest } from '../models/requests';
 import { addCurrency, createAccount, getAccount, getAccountMonster, getAccountParty } from '../services/account.service';
-import { convertToCard } from '../services/card.service';
+import { convertToCard, getAccountCards } from '../services/card.service';
 import { getAccountInventory } from '../services/item.service';
 import { addMonsterToAccount, getAccountMonsters } from '../services/monster.service';
 import { addTalents, resetTalents } from '../services/talent.service';
@@ -140,6 +140,21 @@ AccountRouter.put('/accounts/:accountId/monsters/:monsterId/card', async (req, r
     const monsterId = req.params.monsterId;
 
     const result = await convertToCard(accountId, monsterId);
+
+    res.send(result);
+  } catch (error) {
+    sendError(res, error);
+  }
+})
+
+/**
+ * Get All Monster Cards Related to Account
+ */
+ AccountRouter.get('/accounts/:accountId/cards', async (req, res) => {
+  try {
+    const accountId = req.params.accountId;
+
+    const result = await getAccountCards(accountId)
 
     res.send(result);
   } catch (error) {

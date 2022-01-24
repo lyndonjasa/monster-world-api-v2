@@ -50,3 +50,22 @@ export async function convertToCard(accountId: string, monsterId: string): Promi
     throw error
   }
 }
+
+/**
+ * Return Card Inventory of the Account
+ * @param accountId Account Id
+ */
+export async function getAccountCards(accountId: string): Promise<ICardInventoryDocument> {
+  try {
+    const inventory = await CardInventory
+                        .findOne({ account: new Types.ObjectId(accountId) })
+                        .select('-_id -cards._id -__v')
+    if (!inventory) {
+      throwError(404, 'Inventory not found')
+    }
+
+    return inventory
+  } catch (error) {
+    throw error
+  }
+}

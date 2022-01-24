@@ -6,7 +6,7 @@ import { CreateAccountRequest } from "../models/requests";
 import { CreateAccountResponse, ErrorResponse } from "../models/responses";
 import { DetailedMonsterResponse } from "../models/responses/detailed-monster.response";
 import { IAccountDocument, IDetailedMonster, IDetailedMonsterDocument, IMonsterDocument, ISkill, ISkillDocument } from "../mongo/interfaces";
-import { Account, DetailedMonster, Monster } from "../mongo/models";
+import { Account, CardInventory, DetailedMonster, Monster } from "../mongo/models";
 import config from "../shared/config";
 import { EvolutionEnum, starterGroups } from "../shared/constants";
 
@@ -154,6 +154,14 @@ export async function createAccount(request: CreateAccountRequest): Promise<Crea
     const savedMonsters = await DetailedMonster.insertMany(selectedMonsters, { session: usedSession });
 
     await Account.updateOne({ _id: savedAccount._id }, { $set: { party: savedMonsters.map(sm => sm._id) } }, { session: usedSession } )
+
+    // create a card inventory
+    const cardInventory = new CardInventory({
+      account: savedAccount._id,
+      cards: []
+    })
+
+    await cardInventory.save({ session: usedSession })
 
     return {
       accountId: savedAccount.id
