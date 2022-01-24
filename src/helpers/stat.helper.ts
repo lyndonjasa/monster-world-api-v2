@@ -83,7 +83,7 @@ const applyTalentBonuses = (stats: StatsModel, talents: string[]) => {
     stats.critRate += 10
   }
   if (talents.includes(TalentEnum.RAGE)) {
-    stats.critDamage += 25
+    stats.critDamage += 50
   }
   if (talents.includes(TalentEnum.FURY)) {
     stats.offense += (stats.offense * 0.2)
