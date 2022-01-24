@@ -5,6 +5,7 @@ import { StarterGroupResponse } from "./starter-group.response";
 import { BuyItemResponse, ItemResponse } from "./buy-item.response";
 import { TameActionResponse } from "./tame-action.response";
 import { DetailedMonsterResponse } from "./detailed-monster.response";
+import { TalentResetResponse } from "./talent-reset.response";
 
 export {
   CreateAccountResponse,
@@ -14,5 +15,6 @@ export {
   BuyItemResponse,
   ItemResponse,
   TameActionResponse,
-  DetailedMonsterResponse
+  DetailedMonsterResponse,
+  TalentResetResponse
 }
