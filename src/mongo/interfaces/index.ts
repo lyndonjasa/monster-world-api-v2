@@ -9,7 +9,7 @@ import { ITalent, ITalentDocument } from "./talent.interface";
 import { IUser, IUserDocument } from "./user.interface";
 import { IDetailedMonster, IDetailedMonsterDocument } from "./detailed-monster.interface";
 import { IAccount, IAccountDocument } from "./account.interface";
-import { ICard, ICardDocument } from "./card.interface";
+import { ICard, ICardInventory, ICardInventoryDocument } from "./card.interface";
 
 export {
   IDictionary,
@@ -37,5 +37,6 @@ export {
   IAccount,
   IAccountDocument,
   ICard,
-  ICardDocument
+  ICardInventory,
+  ICardInventoryDocument
 }
