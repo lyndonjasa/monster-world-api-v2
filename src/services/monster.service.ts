@@ -221,3 +221,16 @@ export async function getAccountMonsters(accountId: string): Promise<DetailedMon
     throw error
   }
 }
+
+/**
+ * Evolves Monster to its next Stage
+ * @param accountId Account Id
+ * @param monsterId Monster Id
+ */
+export async function evolveMonster(accountId: string, monsterId: string): Promise<DetailedMonsterResponse> {
+  try {
+    return undefined
+  } catch (error) {
+    throw error
+  }
+}
