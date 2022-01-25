@@ -4,7 +4,7 @@ import { CreateAccountRequest } from '../models/requests';
 import { addCurrency, createAccount, getAccount, getAccountMonster, getAccountParty } from '../services/account.service';
 import { convertToCard, getAccountCards } from '../services/card.service';
 import { getAccountInventory } from '../services/item.service';
-import { addMonsterToAccount, getAccountMonsters } from '../services/monster.service';
+import { addMonsterToAccount, evolveMonster, getAccountMonsters } from '../services/monster.service';
 import { addTalents, resetTalents } from '../services/talent.service';
 
 const AccountRouter = express.Router();
@@ -140,6 +140,22 @@ AccountRouter.put('/accounts/:accountId/monsters/:monsterId/card', async (req, r
     const monsterId = req.params.monsterId;
 
     const result = await convertToCard(accountId, monsterId);
+
+    res.send(result);
+  } catch (error) {
+    sendError(res, error);
+  }
+})
+
+/**
+ * Converts a Monster to a card
+ */
+ AccountRouter.put('/accounts/:accountId/monsters/:monsterId/evolve', async (req, res) => {
+  try {
+    const accountId = req.params.accountId;
+    const monsterId = req.params.monsterId;
+
+    const result = await evolveMonster(accountId, monsterId);
 
     res.send(result);
   } catch (error) {

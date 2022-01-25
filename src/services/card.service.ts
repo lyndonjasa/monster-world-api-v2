@@ -3,6 +3,7 @@ import { throwError } from "../helpers/error.helper"
 import { ICardInventoryDocument, IMonsterDocument } from "../mongo/interfaces";
 import { CardInventory, DetailedMonster } from "../mongo/models"
 import config from "../shared/config";
+import { getAccountParty } from "./account.service";
 
 /**
  * Converts the Monster to Card
@@ -21,6 +22,11 @@ export async function convertToCard(accountId: string, monsterId: string): Promi
                                 .populate('monster')
     if (!detailedMonster) {
       throwError(404, 'Monster not found');
+    }
+
+    const currentParty = await getAccountParty(accountId);
+    if (currentParty.map(cp => cp._id).includes(detailedMonster.id.toString())) {
+      throwError(400, 'Cannot convert a party member to card')
     }
     
     const monster = detailedMonster.monster as IMonsterDocument
@@ -65,6 +71,29 @@ export async function getAccountCards(accountId: string): Promise<ICardInventory
     }
 
     return inventory
+  } catch (error) {
+    throw error
+  }
+}
+
+/**
+ * Get Card Quantity of a specific card
+ * @param accountId Account Id
+ * @param monster Monster Name
+ */
+export async function getCard(accountId: string, monster: string): Promise<ICardInventoryDocument> {
+  try {
+    const cardInventory = await CardInventory
+                              .findOne({ account: new Types.ObjectId(accountId), 'cards.monsterName': monster }, 
+                              {
+                                cards: { $elemMatch: { monsterName: monster } }
+                              })
+
+    if (!cardInventory) {
+      throwError(404, 'Monster Card not found')
+    }
+
+    return cardInventory
   } catch (error) {
     throw error
   }

@@ -9,10 +9,12 @@ import { DetailedMonsterResponse } from "../models/responses/detailed-monster.re
 import { StarterGroupResponse } from "../models/responses/starter-group.response";
 import { IDetailedMonster, IDetailedMonsterDocument } from "../mongo/interfaces";
 import { IMonsterDocument } from "../mongo/interfaces/monster.interface";
-import { Account, DetailedMonster } from "../mongo/models";
+import { Account, CardInventory, DetailedMonster, Evolution } from "../mongo/models";
 import Monster from "../mongo/models/monster";
 import Skill from "../mongo/models/skill";
+import config from "../shared/config";
 import { EvolutionEnum, starterGroups } from "../shared/constants";
+import { getCard } from "./card.service";
 
 /**
  * Get All Monsters
@@ -228,8 +230,54 @@ export async function getAccountMonsters(accountId: string): Promise<DetailedMon
  * @param monsterId Monster Id
  */
 export async function evolveMonster(accountId: string, monsterId: string): Promise<DetailedMonsterResponse> {
+  const session = await DetailedMonster.startSession();
+  session.startTransaction();
+
   try {
-    return undefined
+    const usedSession = config.environment === 'production' ? session : null
+
+    const requestedMonster = await DetailedMonster
+                            .findOne({ accountId: new Types.ObjectId(accountId), _id: new Types.ObjectId(monsterId) })
+                            .populate('monster')
+    if (!requestedMonster) {
+      throwError(404, 'Monster not found')
+    }
+
+    const { name, evolution, stage } = requestedMonster.monster as IMonsterDocument;
+
+    // validate if monster can still undergo evolution
+    if (evolution == '') {
+      throwError(400, 'Monster can no longer evolve')
+    }
+
+    const cardInventory = await getCard(accountId, name);
+    const monsterCard = cardInventory.cards[0];
+
+    const evolutionStage = await Evolution.findOne({ name: stage })
+    const monsterEvolution = await Monster.findOne({ name: evolution });
+
+    // validate amount of monster card
+    if (monsterCard.quantity < evolutionStage.cardPrerequisite) {
+      throwError(400, 'Insufficient Monster Cards')
+    }
+
+    await DetailedMonster.findByIdAndUpdate(monsterId, { $set: { monster: monsterEvolution._id } }, { session: usedSession })
+    await CardInventory.updateOne({ _id: cardInventory.id, 'cards.monsterName': name },
+                                  {
+                                    $inc: { 'cards.$.quantity': -evolutionStage.cardPrerequisite }
+                                  },
+                                  { session: usedSession })
+
+    const account = await Account.findById(accountId);
+    if (!account.unlockedMonsters.includes(monsterEvolution.name)) {
+      account.unlockedMonsters.push(monsterEvolution.name);
+
+      await account.save();
+    }
+
+    const updatedMonster = await DetailedMonster.findById(monsterId).populate('monster')
+
+    return convertToDetailedMonsterResponse(updatedMonster);
   } catch (error) {
     throw error
   }
