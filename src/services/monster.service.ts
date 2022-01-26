@@ -246,7 +246,7 @@ export async function evolveMonster(accountId: string, monsterId: string): Promi
     const { name, evolution, stage } = requestedMonster.monster as IMonsterDocument;
 
     // validate if monster can still undergo evolution
-    if (evolution == '') {
+    if (!evolution) {
       throwError(400, 'Monster can no longer evolve')
     }
 
@@ -280,5 +280,60 @@ export async function evolveMonster(accountId: string, monsterId: string): Promi
     return convertToDetailedMonsterResponse(updatedMonster);
   } catch (error) {
     throw error
+  }
+}
+
+/**
+ * Apply Card Bonuses
+ * @param accountId Monster Id
+ * @param monsterId Account Id
+ */
+export async function applyCardBonus(accountId: string, monsterId: string): Promise<DetailedMonsterResponse> {
+  const session = await DetailedMonster.startSession();
+  session.startTransaction();
+
+  try {
+    const usedSession = config.environment === 'production' ? session : null;
+    const requestedMonster = await DetailedMonster
+                            .findOne({ accountId: new Types.ObjectId(accountId), _id: new Types.ObjectId(monsterId) })
+                            .populate('monster')
+    if (!requestedMonster) {
+      throwError(404, 'Monster not found')
+    }
+
+    const { name, stage } = requestedMonster.monster as IMonsterDocument;
+    const allowedEvolutions = [EvolutionEnum.MEGA, EvolutionEnum.ULTRA] as string[]
+    if (!allowedEvolutions.includes(stage)) {
+      throwError(400, 'Card Bonus Not Applicable to Monster');
+    }
+
+    const evolutionStage = await Evolution.findOne({ name: stage })
+    if (evolutionStage.maxCardBonus <= requestedMonster.cardBonus) {
+      throwError(400, 'Card Bonus is already maxed out')
+    }
+
+    const cardInventory = await getCard(accountId, name);
+    const monsterCard = cardInventory.cards[0];
+    // validate amount of monster card
+    if (monsterCard.quantity < 1) {
+      throwError(400, 'Insufficient Monster Cards')
+    }
+
+    await DetailedMonster.findByIdAndUpdate(monsterId, { $inc: { cardBonus: 1 } }, { session: usedSession })
+    await CardInventory.updateOne({ _id: cardInventory.id, 'cards.monsterName': name },
+                                  {
+                                    $inc: { 'cards.$.quantity': -1 }
+                                  },
+                                  { session: usedSession })
+
+    const updatedMonster = await DetailedMonster.findById(monsterId).populate('monster')
+
+    return convertToDetailedMonsterResponse(updatedMonster);
+  } catch (error) {
+    session.abortTransaction();
+    
+    throw error
+  } finally {
+    session.endSession();
   }
 }

@@ -15,7 +15,7 @@ export function calculateStats(baseStats: IStats,
   currentLevel: number, 
   talents: string[],
   cardBonus: number,
-  stage: EvolutionEnum): StatsModel {
+  stage: string): StatsModel {
   // get stats according to level
     const finalStats: StatsModel = {
       critDamage: baseStats.critDamage,
@@ -30,7 +30,7 @@ export function calculateStats(baseStats: IStats,
     }
 
     // card bonus calculation
-    if (stage === EvolutionEnum.ULTIMATE || stage === EvolutionEnum.ULTRA) {
+    if (stage === EvolutionEnum.MEGA || stage === EvolutionEnum.ULTRA) {
       // 25 bonus points for Ultra, otherwise 15
       const baseBonusValue = stage === EvolutionEnum.ULTRA ? 25: 15;
       const bonusValuesArray = [...Array(cardBonus + 1).keys()]
