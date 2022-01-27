@@ -1,6 +1,5 @@
 import { DetailedMonsterResponse } from "../models/responses/detailed-monster.response";
 import { IDetailedMonsterDocument, IMonsterDocument, ISkillDocument } from "../mongo/interfaces";
-import { EvolutionEnum } from "../shared/constants";
 import { calculateStats } from "./stat.helper";
 
 export function convertToDetailedMonsterResponse(document: IDetailedMonsterDocument): DetailedMonsterResponse {

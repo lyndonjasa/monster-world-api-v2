@@ -10,6 +10,7 @@ import { TalentModel } from "./talent.model";
 import { IUserRequestPayload } from "./user-request.payload";
 import { StatsModel } from "./stats.model";
 import { InventoryItemModel } from "./inventory-item.model";
+import { SpawnModel } from "./spawn.model";
 
 export {
   DictionaryModel,
@@ -23,5 +24,6 @@ export {
   TalentModel,
   IUserRequestPayload,
   StatsModel,
-  InventoryItemModel
+  InventoryItemModel,
+  SpawnModel
 }

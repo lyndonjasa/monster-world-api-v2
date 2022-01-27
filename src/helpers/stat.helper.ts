@@ -64,7 +64,8 @@ export function calculateStats(baseStats: IStats,
  * @returns 
  */
 const realignStats = (base: IStats, gain: IStats, level: number, property: string) => {
-  return Math.floor(base[property] + (gain[property] * (level - 1)))
+  if (property === 'critRate') return base[property] + (gain[property] * (level - 1))
+  else return Math.floor(base[property] + (gain[property] * (level - 1)))
 }
 
 /**
