@@ -96,11 +96,11 @@ export async function clearSessions(): Promise<any> {
     let deletedCount = 0;
     distinctAccountIds.forEach(async (id) => {
       const result = await DetailedMonster.deleteMany({ accountId: id })
-      deletedCount += result.deletedCount
+      deletedCount += result.deletedCount > 0 ? 1 : 0
     })
 
     return {
-      clearCount: deletedCount
+      clearedSessions: deletedCount
     }
   } catch (error) {
     throw error
