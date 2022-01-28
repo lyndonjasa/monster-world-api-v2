@@ -14,7 +14,9 @@ const schema = new Schema({
     type: Types.ObjectId,
     ref: 'Monster'
   },
-  cardBonus: Number
+  cardBonus: Number,
+  session: Boolean,
+  sessionDate: Date
 })
 
 const DetailedMonster = model<IDetailedMonsterDocument>('DetailedMonster', schema, 'detailed-monsters');

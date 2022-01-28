@@ -3,13 +3,13 @@ import { convertToDetailedMonsterResponse } from "../helpers/monster.helper";
 import { randomizeSpawn } from "../helpers/randomizer.helper";
 import { DungeonModel } from "../models/core/dungeon.model";
 import { UploadDungeonRequest } from "../models/requests/upload-dungeon.request";
-import { DetailedMonsterResponse, EnterDungeonResponse } from "../models/responses";
+import { EnterDungeonResponse } from "../models/responses";
 import { IDetailedMonster } from "../mongo/interfaces";
 import { IDungeonDocument } from "../mongo/interfaces/dungeon.interface";
 import { DetailedMonster, Monster } from "../mongo/models";
 import Dungeon from "../mongo/models/dungeon";
-import { v4 as uuidv4 } from 'uuid'
 import { Types } from "mongoose";
+import moment from "moment";
 
 /**
  * Get All Dungeons
@@ -65,7 +65,9 @@ export async function produceEnemies(dungeonId: string): Promise<EnterDungeonRes
         currentExp: 0,
         talents: [],
         talentPoints: 0,
-        cardBonus: 0
+        cardBonus: 0,
+        session: true,
+        sessionDate: moment().toDate()
       }
 
       detailedMonster.monster = monsterDocuments.find(md => md.name === s.name)
