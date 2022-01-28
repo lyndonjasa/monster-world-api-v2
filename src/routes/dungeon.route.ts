@@ -1,6 +1,7 @@
 import express from 'express'
+import { sendError } from '../helpers/error.helper';
 import { UploadDungeonRequest } from '../models/requests/upload-dungeon.request';
-import { getDungeonById, getDungeons, produceEnemies, uploadDungeons } from '../services/dungeon.service';
+import { clearSessions, getDungeonById, getDungeons, produceEnemies, uploadDungeons } from '../services/dungeon.service';
 
 const DungeonRouter = express.Router();
 
@@ -42,6 +43,19 @@ DungeonRouter.get('/dungeons/:id', async (req, res) => {
     res.send(dungeon);
   } catch (error) {
     res.status(500).send(error);
+  }
+})
+
+/**
+ * Get Dungeon Details by Id
+ */
+ DungeonRouter.post('/dungeons/clear', async (_, res) => {
+  try {
+    const result = await clearSessions();
+
+    res.send(result);
+  } catch (error) {
+    sendError(res, error)
   }
 })
 

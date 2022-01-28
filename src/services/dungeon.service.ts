@@ -6,7 +6,7 @@ import { UploadDungeonRequest } from "../models/requests/upload-dungeon.request"
 import { EnterDungeonResponse } from "../models/responses";
 import { IDetailedMonster } from "../mongo/interfaces";
 import { IDungeonDocument } from "../mongo/interfaces/dungeon.interface";
-import { DetailedMonster, Monster } from "../mongo/models";
+import { Account, DetailedMonster, Monster } from "../mongo/models";
 import Dungeon from "../mongo/models/dungeon";
 import { Types } from "mongoose";
 import moment from "moment";
@@ -79,6 +79,28 @@ export async function produceEnemies(dungeonId: string): Promise<EnterDungeonRes
     return {
       sessionId: tempAccountId.toString(),
       encounters: enemyDocuments.map(e => convertToDetailedMonsterResponse(e))
+    }
+  } catch (error) {
+    throw error
+  }
+}
+
+/**
+ * Clear Past Dungeon Sessions
+ */
+export async function clearSessions(): Promise<any> {
+  try {
+    const pastTwoDays = moment().add(-2, 'days').toDate()
+    const distinctAccountIds: Types.ObjectId[] = await DetailedMonster.distinct('accountId', { session: true, sessionDate: { $lte: pastTwoDays } })
+    
+    let deletedCount = 0;
+    distinctAccountIds.forEach(async (id) => {
+      const result = await DetailedMonster.deleteMany({ accountId: id })
+      deletedCount += result.deletedCount
+    })
+
+    return {
+      clearCount: deletedCount
     }
   } catch (error) {
     throw error
