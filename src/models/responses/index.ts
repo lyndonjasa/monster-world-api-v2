@@ -7,6 +7,7 @@ import { TameActionResponse } from "./tame-action.response";
 import { DetailedMonsterResponse } from "./detailed-monster.response";
 import { TalentResetResponse } from "./talent-reset.response";
 import { EnterDungeonResponse } from "./enter-dungeon.response";
+import { WinBattleResponse } from "./win-battle.response";
 
 export {
   CreateAccountResponse,
@@ -18,5 +19,6 @@ export {
   TameActionResponse,
   DetailedMonsterResponse,
   TalentResetResponse,
-  EnterDungeonResponse
+  EnterDungeonResponse,
+  WinBattleResponse
 }

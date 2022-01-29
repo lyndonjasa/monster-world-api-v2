@@ -2,8 +2,8 @@ import { Types } from "mongoose";
 import { throwError } from "../helpers/error.helper";
 import { tryTame } from "../helpers/randomizer.helper";
 import { getBonusCatchRate } from "../helpers/stat.helper";
-import { TameActionRequest } from "../models/requests";
-import { ErrorResponse, TameActionResponse } from "../models/responses";
+import { TameActionRequest, WinBattleRequest } from "../models/requests";
+import { ErrorResponse, TameActionResponse, WinBattleResponse } from "../models/responses";
 import { Account, Evolution, Item, Monster } from "../mongo/models";
 import config from "../shared/config";
 import { addMonsterToAccount } from "./monster.service";
@@ -74,5 +74,18 @@ export async function tameMonster(request: TameActionRequest): Promise<TameActio
     throw error
   } finally {
     session.endSession();
+  }
+}
+
+/**
+ * Returns the Exp and Currency rewards
+ * @param request Battle Session
+ */
+export async function winBattle(request: WinBattleRequest): Promise<WinBattleResponse> {
+  try {
+    
+    return undefined;
+  } catch (error) {
+    throw error
   }
 }
