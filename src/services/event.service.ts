@@ -110,10 +110,11 @@ export async function winBattle(request: WinBattleRequest): Promise<WinBattleRes
       totalExp += evolution.baseExp * e.level
     })
 
+    const distributedExp = Math.floor(totalExp / party.length)
     const response: WinBattleResponse = {
       changes: [],
       currencyDrop: totalCurrency,
-      distributedExp: Math.floor(totalExp / party.length)
+      distributedExp
     }
 
     return response;
