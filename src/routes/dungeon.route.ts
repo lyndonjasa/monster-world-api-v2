@@ -1,7 +1,9 @@
 import express from 'express'
 import { sendError } from '../helpers/error.helper';
+import { WinBattleRequest } from '../models/requests';
 import { UploadDungeonRequest } from '../models/requests/upload-dungeon.request';
 import { clearSessions, getDungeonById, getDungeons, produceEnemies, uploadDungeons } from '../services/dungeon.service';
+import { winBattle } from '../services/event.service';
 
 const DungeonRouter = express.Router();
 
@@ -41,6 +43,20 @@ DungeonRouter.get('/dungeons/:id', async (req, res) => {
     const dungeon = await produceEnemies(id);
 
     res.send(dungeon);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+})
+
+/**
+ * Get Dungeon Details by Id
+ */
+ DungeonRouter.post('/dungeons/:id/enter', async (req, res) => {
+  try {
+    const request = req.body as WinBattleRequest
+    const response = await winBattle(request);
+
+    res.send(response);
   } catch (error) {
     res.status(500).send(error);
   }

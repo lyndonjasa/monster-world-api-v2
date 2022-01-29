@@ -4,8 +4,10 @@ import { tryTame } from "../helpers/randomizer.helper";
 import { getBonusCatchRate } from "../helpers/stat.helper";
 import { TameActionRequest, WinBattleRequest } from "../models/requests";
 import { ErrorResponse, TameActionResponse, WinBattleResponse } from "../models/responses";
-import { Account, Evolution, Item, Monster } from "../mongo/models";
+import { IMonsterDocument } from "../mongo/interfaces";
+import { Account, DetailedMonster, Evolution, Item, Monster } from "../mongo/models";
 import config from "../shared/config";
+import { getAccountParty } from "./account.service";
 import { addMonsterToAccount } from "./monster.service";
 
 /**
@@ -83,8 +85,38 @@ export async function tameMonster(request: TameActionRequest): Promise<TameActio
  */
 export async function winBattle(request: WinBattleRequest): Promise<WinBattleResponse> {
   try {
-    
-    return undefined;
+    const { accountId, sessionId } = request;
+
+    // get current account party
+    const party = await getAccountParty(accountId);
+
+    // get monsters from session
+    const enemies = await DetailedMonster.find({ accountId: new Types.ObjectId(sessionId) }).populate('monster')
+    if (!enemies || enemies.length === 0) {
+      throwError(404, 'Session Not Found')
+    }
+
+    // get enemy stages 
+    const enemyStages = enemies.map(e => (e.monster as IMonsterDocument).stage).filter((value, index, self) => self.indexOf(value) === index)
+    const evolutions = await Evolution.find({ name: { $in: enemyStages } });
+
+    // calculate total exp and total currency drops
+    let totalCurrency = 0;
+    let totalExp = 0;
+    enemies.forEach(e => {
+      const evolution = evolutions.find(ev => ev.name === (e.monster as IMonsterDocument).stage)
+
+      totalCurrency += evolution.currency.base + (evolution.currency.increment * (e.level - 1))
+      totalExp += evolution.baseExp * e.level
+    })
+
+    const response: WinBattleResponse = {
+      changes: [],
+      currencyDrop: totalCurrency,
+      distributedExp: Math.floor(totalExp / party.length)
+    }
+
+    return response;
   } catch (error) {
     throw error
   }
