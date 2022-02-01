@@ -1,13 +1,16 @@
 import { Types } from "mongoose";
 import { throwError } from "../helpers/error.helper";
+import { expTable } from "../helpers/exp.helper";
 import { tryTame } from "../helpers/randomizer.helper";
-import { getBonusCatchRate } from "../helpers/stat.helper";
+import { calculateStats, getBonusCatchRate } from "../helpers/stat.helper";
 import { TameActionRequest, WinBattleRequest } from "../models/requests";
 import { ErrorResponse, TameActionResponse, WinBattleResponse } from "../models/responses";
 import { IMonsterDocument } from "../mongo/interfaces";
 import { Account, DetailedMonster, Evolution, Item, Monster } from "../mongo/models";
 import config from "../shared/config";
 import { getAccountParty } from "./account.service";
+import { getEvolutions } from "./evolution.service";
+import { getExperienceTable } from "./experience.service";
 import { addMonsterToAccount } from "./monster.service";
 
 /**
@@ -97,8 +100,7 @@ export async function winBattle(request: WinBattleRequest): Promise<WinBattleRes
     }
 
     // get enemy stages 
-    const enemyStages = enemies.map(e => (e.monster as IMonsterDocument).stage).filter((value, index, self) => self.indexOf(value) === index)
-    const evolutions = await Evolution.find({ name: { $in: enemyStages } });
+    const evolutions = await getEvolutions();
 
     // calculate total exp and total currency drops
     let totalCurrency = 0;
@@ -116,6 +118,28 @@ export async function winBattle(request: WinBattleRequest): Promise<WinBattleRes
       currencyDrop: totalCurrency,
       distributedExp
     }
+
+    party.forEach(p => {
+      p.currentExp += distributedExp;
+      const { levelCap } = evolutions.find(ev => ev.name === p.stage)
+
+      const expRow = expTable.find(exp => p.currentExp >= exp.min && p.currentExp <= exp.max)
+      // if exp row level is different from current level
+      // and current level is less than the cap
+      if (expRow.level !== p.level && p.level < levelCap) {
+        // push to response
+        response.changes.push({
+          name: p.name,
+          previousLevel: p.level,
+          currentLevel: expRow.level
+        });
+
+        // update the level
+        p.level = expRow.level
+      }
+
+      // add saving here
+    })
 
     return response;
   } catch (error) {

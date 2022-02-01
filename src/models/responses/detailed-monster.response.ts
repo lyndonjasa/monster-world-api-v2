@@ -13,4 +13,5 @@ export class DetailedMonsterResponse {
   sprite: ISprite;
   element: number;
   skills: ISkill[];
+  stage: string;
 }

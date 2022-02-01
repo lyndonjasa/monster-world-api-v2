@@ -8,6 +8,6 @@ export class WinBattleResponse {
 
 export class StatChanges {
   name: string;
-  previous: IStats;
-  current: IStats;
+  previousLevel: number;
+  currentLevel: number;
 }
