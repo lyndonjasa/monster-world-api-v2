@@ -27,3 +27,17 @@ export async function uploadExperinceTable(request: UploadExperienceRequest[]): 
     throw error
   }
 }
+
+/**
+ * Get the whole Experience Table
+ * @returns Experience Table
+ */
+export async function getExperienceTable(): Promise<IExperienceDocument[]> {
+  try {
+    const table = await Experience.find();
+
+    return table;
+  } catch (error) {
+    throw error
+  }
+}

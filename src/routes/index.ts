@@ -4,6 +4,7 @@ import DictionaryRouter from "./dictionary.route";
 import DungeonRouter from "./dungeon.route";
 import EventRouter from "./events.route";
 import EvolutionRouter from "./evolutions.route";
+import ExperienceRouter from "./experience.route";
 import ItemsRouter from "./items.route";
 import MonsterRouter from "./monster.route";
 import SkillRoute from "./skills.route";
@@ -22,5 +23,6 @@ routes.push(UserRouter);
 routes.push(DungeonRouter);
 routes.push(AccountRouter);
 routes.push(EventRouter);
+routes.push(ExperienceRouter);
 
 export default routes;
