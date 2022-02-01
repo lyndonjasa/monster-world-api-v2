@@ -23,6 +23,5 @@ routes.push(UserRouter);
 routes.push(DungeonRouter);
 routes.push(AccountRouter);
 routes.push(EventRouter);
-routes.push(ExperienceRouter);
 
 export default routes;
