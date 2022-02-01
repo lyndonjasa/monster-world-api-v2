@@ -2,7 +2,7 @@ import { Types } from "mongoose";
 import { throwError } from "../helpers/error.helper";
 import { expTable } from "../helpers/exp.helper";
 import { tryTame } from "../helpers/randomizer.helper";
-import { calculateStats, getBonusCatchRate } from "../helpers/stat.helper";
+import { getBonusCatchRate } from "../helpers/stat.helper";
 import { TameActionRequest, WinBattleRequest } from "../models/requests";
 import { ErrorResponse, TameActionResponse, WinBattleResponse } from "../models/responses";
 import { IMonsterDocument } from "../mongo/interfaces";

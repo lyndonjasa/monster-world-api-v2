@@ -62,7 +62,7 @@ export async function getAccountParty(id: string): Promise<DetailedMonsterRespon
                           .populate('party')
                           .populate({
                             path: 'party',
-                            select: '-accountId -talentPoints -__v',
+                            select: '-accountId -__v',
                             populate: {
                               path: 'monster',
                               select: '-evolution -__v',
@@ -86,6 +86,35 @@ export async function getAccountParty(id: string): Promise<DetailedMonsterRespon
     })
 
     return monsterParty
+  } catch (error) {
+    throw error
+  }
+}
+
+/**
+ * Switch Party Members
+ */
+export async function switchParty(accountId: string, monsterIds: string[]): Promise<DetailedMonsterResponse[]> {
+  try {
+    if (monsterIds.length > 3 || monsterIds.length === 0) {
+      throwError(400, 'Valid Party Count ranges from 1 to 3')
+    }
+
+    const ids = monsterIds.map(id => new Types.ObjectId(id))
+
+    const selectedMonsters = await DetailedMonster.find({ 
+      accountId: new Types.ObjectId(accountId),
+      _id: {
+        $in: ids
+      }
+    });
+    if (selectedMonsters.length != monsterIds.length) {
+      throwError(400, 'Invalid Request, Missing/Duplicate Monster Ids')
+    }
+
+    await Account.findByIdAndUpdate(accountId, { $set: { party: ids } });
+
+    return getAccountParty(accountId);
   } catch (error) {
     throw error
   }

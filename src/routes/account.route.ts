@@ -1,7 +1,7 @@
 import express from 'express'
 import { sendError } from '../helpers/error.helper';
 import { CreateAccountRequest } from '../models/requests';
-import { addCurrency, createAccount, getAccount, getAccountMonster, getAccountParty } from '../services/account.service';
+import { addCurrency, createAccount, getAccount, getAccountMonster, getAccountParty, switchParty } from '../services/account.service';
 import { convertToCard, getAccountCards } from '../services/card.service';
 import { getAccountInventory } from '../services/item.service';
 import { addMonsterToAccount, applyCardBonus, evolveMonster, getAccountMonsters } from '../services/monster.service';
@@ -34,6 +34,22 @@ AccountRouter.get('/accounts/:id', async (req, res) => {
   try {
     const accountId = req.params.id
     const account = await getAccountParty(accountId);
+
+    res.send(account)
+  } catch (error) {
+    sendError(res, error)
+  }
+})
+
+/**
+ * Update Current Party of Account
+ */
+ AccountRouter.put('/accounts/:id/party', async (req, res) => {
+  try {
+    const accountId = req.params.id
+    const monsterIds = req.body as string[]
+
+    const account = await switchParty(accountId, monsterIds);
 
     res.send(account)
   } catch (error) {
