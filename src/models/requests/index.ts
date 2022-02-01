@@ -13,6 +13,7 @@ import { ItemRequest, BuyItemRequest } from "./buy-item.request";
 import { TameActionRequest } from "./tame-action.request";
 import { BackdoorTalentRequest } from "./backdoor-talent.request";
 import { WinBattleRequest } from "./win-battle.request";
+import { UploadExperienceRequest } from "./upload-experience.request";
 
 export {
   CreateAccountRequest,
@@ -30,5 +31,6 @@ export {
   ItemRequest,
   TameActionRequest,
   BackdoorTalentRequest,
-  WinBattleRequest
+  WinBattleRequest,
+  UploadExperienceRequest
 }

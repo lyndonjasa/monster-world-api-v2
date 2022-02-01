@@ -10,6 +10,7 @@ import { IUser, IUserDocument } from "./user.interface";
 import { IDetailedMonster, IDetailedMonsterDocument } from "./detailed-monster.interface";
 import { IAccount, IAccountDocument } from "./account.interface";
 import { ICard, ICardInventory, ICardInventoryDocument } from "./card.interface";
+import { IExperience, IExperienceDocument } from "./experience.interface";
 
 export {
   IDictionary,
@@ -38,5 +39,7 @@ export {
   IAccountDocument,
   ICard,
   ICardInventory,
-  ICardInventoryDocument
+  ICardInventoryDocument,
+  IExperience,
+  IExperienceDocument
 }

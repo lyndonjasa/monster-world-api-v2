@@ -11,6 +11,7 @@ import { IUserRequestPayload } from "./user-request.payload";
 import { StatsModel } from "./stats.model";
 import { InventoryItemModel } from "./inventory-item.model";
 import { SpawnModel } from "./spawn.model";
+import { ExperienceModel } from "./experience.model";
 
 export {
   DictionaryModel,
@@ -25,5 +26,6 @@ export {
   IUserRequestPayload,
   StatsModel,
   InventoryItemModel,
-  SpawnModel
+  SpawnModel,
+  ExperienceModel
 }

@@ -9,6 +9,7 @@ import User from "./user";
 import Account from "./account";
 import DetailedMonster from "./detailed-monster";
 import CardInventory from "./card-inventory";
+import Experience from "./experience";
 
 export {
   Dictionary,
@@ -21,5 +22,6 @@ export {
   User,
   Account,
   DetailedMonster,
-  CardInventory
+  CardInventory,
+  Experience
 }
