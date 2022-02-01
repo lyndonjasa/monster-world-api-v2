@@ -144,10 +144,11 @@ export async function winBattle(request: WinBattleRequest): Promise<WinBattleRes
         });
 
         // update the level
+        p.talentPoints += finalLevel - p.level
         p.level = finalLevel
       }
       
-      await DetailedMonster.findByIdAndUpdate(p._id, { $set: { level: p.level, currentExp: p.currentExp } }, { session: usedSession })
+      await DetailedMonster.findByIdAndUpdate(p._id, { $set: { level: p.level, currentExp: p.currentExp, talentPoints: p.talentPoints } }, { session: usedSession })
     })
 
     await Account.findByIdAndUpdate(accountId, { $inc: { currency: totalCurrency } }, { session: usedSession })

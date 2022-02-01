@@ -49,9 +49,9 @@ DungeonRouter.get('/dungeons/:id', async (req, res) => {
 })
 
 /**
- * Get Dungeon Details by Id
+ * End a Dungeon session
  */
- DungeonRouter.post('/dungeons/:id/enter', async (req, res) => {
+ DungeonRouter.post('/dungeons/end', async (req, res) => {
   try {
     const request = req.body as WinBattleRequest
     const response = await winBattle(request);
