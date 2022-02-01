@@ -34,7 +34,7 @@ export async function uploadExperinceTable(request: UploadExperienceRequest[]): 
  */
 export async function getExperienceTable(): Promise<IExperienceDocument[]> {
   try {
-    const table = await Experience.find();
+    const table = await Experience.find().select('-__v');
 
     return table;
   } catch (error) {
