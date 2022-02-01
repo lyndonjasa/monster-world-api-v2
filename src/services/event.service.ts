@@ -87,7 +87,12 @@ export async function tameMonster(request: TameActionRequest): Promise<TameActio
  * @param request Battle Session
  */
 export async function winBattle(request: WinBattleRequest): Promise<WinBattleResponse> {
+  const session = await DetailedMonster.startSession();
+  session.startTransaction();
+
   try {
+    const usedSession = config.environment === 'production' ? session : null;
+
     const { accountId, sessionId } = request;
 
     // get current account party
@@ -119,30 +124,41 @@ export async function winBattle(request: WinBattleRequest): Promise<WinBattleRes
       distributedExp
     }
 
-    party.forEach(p => {
+    party.forEach(async p => {
       p.currentExp += distributedExp;
       const { levelCap } = evolutions.find(ev => ev.name === p.stage)
 
       const expRow = expTable.find(exp => p.currentExp >= exp.min && p.currentExp <= exp.max)
       // if exp row level is different from current level
-      // and current level is less than the cap
       if (expRow.level !== p.level && p.level < levelCap) {
+        let finalLevel = expRow.level
+        if (expRow.level > levelCap) {
+          finalLevel = levelCap
+        }
+
         // push to response
         response.changes.push({
           name: p.name,
           previousLevel: p.level,
-          currentLevel: expRow.level
+          currentLevel: finalLevel
         });
 
         // update the level
-        p.level = expRow.level
+        p.level = finalLevel
       }
-
-      // add saving here
+      
+      await DetailedMonster.findByIdAndUpdate(p._id, { $set: { level: p.level, currentExp: p.currentExp } }, { session: usedSession })
     })
+
+    await Account.findByIdAndUpdate(accountId, { $inc: { currency: totalCurrency } }, { session: usedSession })
+    await DetailedMonster.deleteMany({ accountId: new Types.ObjectId(sessionId) }, { session: usedSession })
 
     return response;
   } catch (error) {
+    session.abortTransaction();
+
     throw error
+  } finally {
+    session.endSession();
   }
 }
