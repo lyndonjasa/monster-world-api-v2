@@ -1,4 +1,4 @@
-import { Types } from "mongoose";
+import { PipelineStage, Types } from "mongoose";
 import { throwError } from "../helpers/error.helper";
 import { convertToDetailedMonsterResponse, validateSearchCriteria } from "../helpers/monster.helper";
 import { convertToNumberElement } from "../helpers/skill.helper";
@@ -216,12 +216,54 @@ export async function getAccountMonsters(accountId: string, criteria: SearchMons
 
     const id = new Types.ObjectId(accountId);
 
-    const { page, pageSize } = criteria
+    const { page, pageSize, filters } = criteria
 
-    const documents = await DetailedMonster.find({ accountId: id })
+    const findQuery = { accountId: id }
+
+    // add filters
+    if (filters) {
+      const { elements, stages } = filters
+
+      // add element filters
+      if (elements && elements.length > 0) {
+        const elementValues = elements.map(e => convertToNumberElement(e));
+
+        findQuery['monster.element'] = { $in: elementValues }
+      }
+
+      // add stage filters
+      if (stages && stages.length > 0) {
+        findQuery['monster.stage'] = { $in: stages }
+      }
+    }
+
+    const fullAggregation: PipelineStage[] = [
+      {
+        $lookup: {
+          from: 'monsters',
+          localField: 'monster',
+          foreignField: '_id',
+          as: 'monster'
+        }
+      },
+      {
+        $set: {
+          monster: { $arrayElemAt: ['$monster', 0] }
+        }
+      },
+      {
+        $match: findQuery
+      }
+    ]
+
+    console.log(fullAggregation);
+
+    const documents = await DetailedMonster
+                            .aggregate(fullAggregation)
                             .skip((page - 1) * pageSize)
-                            .limit(pageSize)
-                            .populate('monster', '-evolution -__v -skills -sprite');
+                            .limit(pageSize);
+
+    console.log(documents);
 
     const monsters = documents.map(d => convertToDetailedMonsterResponse(d))
 
