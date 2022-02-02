@@ -9,7 +9,7 @@ export function validateSearchCriteria(criteria: SearchMonsterRequest): void {
   const { page, pageSize, sortProperty, filters } = criteria
 
   // validate page
-  if (isNaN(page) || page < 0) {
+  if (isNaN(page) || page < 1) {
     throwError(400, 'Invalid Page value');
   }
 

@@ -216,7 +216,11 @@ export async function getAccountMonsters(accountId: string, criteria: SearchMons
 
     const id = new Types.ObjectId(accountId);
 
+    const { page, pageSize } = criteria
+
     const documents = await DetailedMonster.find({ accountId: id })
+                            .skip((page - 1) * pageSize)
+                            .limit(pageSize)
                             .populate('monster', '-evolution -__v -skills -sprite');
 
     const monsters = documents.map(d => convertToDetailedMonsterResponse(d))
