@@ -14,6 +14,7 @@ import { TameActionRequest } from "./tame-action.request";
 import { BackdoorTalentRequest } from "./backdoor-talent.request";
 import { WinBattleRequest } from "./win-battle.request";
 import { UploadExperienceRequest } from "./upload-experience.request";
+import { SearchMonsterRequest } from "./search-monsters.request";
 
 export {
   CreateAccountRequest,
@@ -32,5 +33,6 @@ export {
   TameActionRequest,
   BackdoorTalentRequest,
   WinBattleRequest,
-  UploadExperienceRequest
+  UploadExperienceRequest,
+  SearchMonsterRequest
 }

@@ -1,8 +1,9 @@
 import { Types } from "mongoose";
 import { throwError } from "../helpers/error.helper";
-import { convertToDetailedMonsterResponse } from "../helpers/monster.helper";
+import { convertToDetailedMonsterResponse, validateSearchCriteria } from "../helpers/monster.helper";
 import { convertToNumberElement } from "../helpers/skill.helper";
 import { MonsterModel } from "../models/core/monster.model";
+import { SearchMonsterRequest } from "../models/requests";
 import { UploadMonsterRequest } from "../models/requests/upload-monster.request";
 import { UploadSpriteRequest } from "../models/requests/upload-sprite.request";
 import { DetailedMonsterResponse } from "../models/responses/detailed-monster.response";
@@ -209,8 +210,10 @@ export async function addMonsterToAccount(accountId: string, request: string[]):
  * Fetches all monsters owned by the account
  * @param accountId Account Id
  */
-export async function getAccountMonsters(accountId: string): Promise<DetailedMonsterResponse[]> {
+export async function getAccountMonsters(accountId: string, criteria: SearchMonsterRequest): Promise<DetailedMonsterResponse[]> {
   try {
+    validateSearchCriteria(criteria);
+
     const id = new Types.ObjectId(accountId);
 
     const documents = await DetailedMonster.find({ accountId: id })

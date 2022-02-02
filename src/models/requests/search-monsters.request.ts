@@ -6,6 +6,6 @@ export class SearchMonsterRequest {
     elements: string[];
     stages: string[];
   }
-  sortOrder: string;
+  sortProperty: string;
   sortDirection: boolean;
 }

@@ -1,6 +1,6 @@
 import express from 'express'
 import { sendError } from '../helpers/error.helper';
-import { CreateAccountRequest } from '../models/requests';
+import { CreateAccountRequest, SearchMonsterRequest } from '../models/requests';
 import { addCurrency, createAccount, getAccount, getAccountMonster, getAccountParty, switchParty } from '../services/account.service';
 import { convertToCard, getAccountCards } from '../services/card.service';
 import { getAccountInventory } from '../services/item.service';
@@ -63,11 +63,12 @@ AccountRouter.get('/accounts/:id', async (req, res) => {
  AccountRouter.post('/accounts/:id/monsters', async (req, res) => {
   try {
     const accountId = req.params.id
-    const monsters = await getAccountMonsters(accountId);
+    const criteria = req.body as SearchMonsterRequest;
+    const monsters = await getAccountMonsters(accountId, criteria);
 
     res.send(monsters);
   } catch (error) {
-    res.status(500).send(error);
+    sendError(res, error)
   }
 })
 
