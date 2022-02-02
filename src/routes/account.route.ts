@@ -60,7 +60,7 @@ AccountRouter.get('/accounts/:id', async (req, res) => {
 /**
  * Retrieve all monsters owned by the account
  */
- AccountRouter.get('/accounts/:id/monsters', async (req, res) => {
+ AccountRouter.post('/accounts/:id/monsters', async (req, res) => {
   try {
     const accountId = req.params.id
     const monsters = await getAccountMonsters(accountId);
