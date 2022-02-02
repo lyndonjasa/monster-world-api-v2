@@ -216,7 +216,7 @@ export async function getAccountMonsters(accountId: string, criteria: SearchMons
 
     const id = new Types.ObjectId(accountId);
 
-    const { page, pageSize, filters } = criteria
+    const { page, pageSize, filters, sortDirection, sortProperty } = criteria
 
     const findQuery = { accountId: id }
 
@@ -248,7 +248,8 @@ export async function getAccountMonsters(accountId: string, criteria: SearchMons
       },
       {
         $set: {
-          monster: { $arrayElemAt: ['$monster', 0] }
+          monster: { $arrayElemAt: ['$monster', 0] },
+          name: { $arrayElemAt: ['$monster.name', 0] }
         }
       },
       {
@@ -256,14 +257,18 @@ export async function getAccountMonsters(accountId: string, criteria: SearchMons
       }
     ]
 
-    console.log(fullAggregation);
+    if (sortProperty !== 'None') {
+      fullAggregation.push({
+        $sort: {
+          [`${sortProperty.toLowerCase()}`]: sortDirection.toUpperCase() === 'ASC' ? 1 : -1
+        }
+      })
+    }
 
     const documents = await DetailedMonster
                             .aggregate(fullAggregation)
                             .skip((page - 1) * pageSize)
                             .limit(pageSize);
-
-    console.log(documents);
 
     const monsters = documents.map(d => convertToDetailedMonsterResponse(d))
 

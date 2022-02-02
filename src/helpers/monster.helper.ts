@@ -6,7 +6,7 @@ import { expTable } from "./exp.helper";
 import { calculateStats } from "./stat.helper";
 
 export function validateSearchCriteria(criteria: SearchMonsterRequest): void {
-  const { page, pageSize, sortProperty, filters } = criteria
+  const { page, pageSize, sortProperty, filters, sortDirection } = criteria
 
   // validate page
   if (isNaN(page) || page < 1) {
@@ -22,6 +22,13 @@ export function validateSearchCriteria(criteria: SearchMonsterRequest): void {
   const validSortProperties = ['Name', 'Level', 'None'];
   if (!validSortProperties.includes(sortProperty)) {
     throwError(400, `Invalid Sort Property. Allowed values are ${validSortProperties.join(', ')}`)
+  }
+
+  const validSortDirections = ['ASC', 'DESC'];
+  if (sortDirection && sortProperty !== 'None') {
+    if (!validSortDirections.includes(sortDirection.toUpperCase())) {
+      throwError(400, `Invalid Sort Direction. Allowed values are ${validSortDirections.join(', ')}`)
+    }
   }
 
   // validate filters
@@ -55,7 +62,7 @@ export function convertToDetailedMonsterResponse(document: IDetailedMonsterDocum
   const bonusIndicator = document.cardBonus > 0 ? ` +${document.cardBonus}` : ''
 
   const monster: DetailedMonsterResponse = {
-    _id: document.id,
+    _id: document.id || document._id,
     currentExp: document.currentExp,
     element: m.element,
     expToLevel: getExpToNextLevel(document.currentExp), // TODO: replace this with actual value from exp table
