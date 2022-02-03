@@ -216,9 +216,14 @@ export async function getAccountMonsters(accountId: string, criteria: SearchMons
 
     const id = new Types.ObjectId(accountId);
 
-    const { page, pageSize, filters, sortDirection, sortProperty } = criteria
+    const { page, pageSize, filters, sortDirection, sortProperty, searchText } = criteria
 
     const findQuery = { accountId: id }
+
+    if (searchText) {
+      const regex = new RegExp(`^${searchText.trim()}`, 'i')
+      findQuery['name'] = regex
+    }
 
     // add filters
     if (filters) {
