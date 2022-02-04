@@ -6,6 +6,11 @@ import User from "../mongo/models/user";
 import { LoginRequest } from "../models/requests/login.request";
 import { ErrorResponse } from "../models/responses/error.response";
 import { LoginResponse } from "../models/responses/login.response";
+import { UserAccountsResponse } from "../models/responses/user-accounts.response";
+import { Account } from "../mongo/models";
+import { Types } from "mongoose";
+import { throwError } from "../helpers/error.helper";
+import { getAccountParty } from "./account.service";
 
 /**
  * Create a User
@@ -65,6 +70,40 @@ export async function login(request: LoginRequest): Promise<LoginResponse> {
       userId: user.id,
       authToken: jwt
     }
+  } catch (error) {
+    throw error
+  }
+}
+
+/**
+ * Get Accounts related to the User
+ * @param userId 
+ */
+export async function getUserAccounts(userId: string): Promise<UserAccountsResponse[]> {
+  try {
+    const accounts = await Account.find({ userId: new Types.ObjectId(userId) })
+    const accountIds = accounts.map(a => a.id.toString());
+    
+    const response: UserAccountsResponse[] = [];
+    for (let index = 0; index < accountIds.length; index++) {
+      const account = accountIds[index];
+      const userAccount: UserAccountsResponse = {
+        accountId: account,
+        monsters: []
+      }
+      
+      const party = await getAccountParty(account);
+      party.forEach(p => {
+        userAccount.monsters.push({
+          level: p.level,
+          name: p.name
+        });
+      })
+
+      response.push(userAccount);
+    }
+
+    return response;
   } catch (error) {
     throw error
   }

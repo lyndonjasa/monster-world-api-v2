@@ -1,7 +1,8 @@
 import express from 'express'
+import { sendError } from '../helpers/error.helper';
 import { CreateUserRequest } from '../models/requests/create-user.request';
 import { LoginRequest } from '../models/requests/login.request';
-import { createUser, login } from '../services/user.service';
+import { createUser, getUserAccounts, login } from '../services/user.service';
 
 const UserRouter = express.Router();
 
@@ -28,8 +29,6 @@ UserRouter.post('/users/signup', async (req, res) => {
  */
 UserRouter.post('/users/login', async (req, res) => {
   try {
-    debugger
-
     const request = req.body as LoginRequest;
     const user = await login(request);
 
@@ -40,6 +39,20 @@ UserRouter.post('/users/login', async (req, res) => {
     }
 
     res.status(500).send(error);
+  }
+})
+
+/**
+ * Get Accounts related to the User
+ */
+UserRouter.get('/users/:id/accounts', async (req, res) => {
+  try {
+    const userId = req.params.id
+    const accounts = await getUserAccounts(userId);
+
+    res.send(accounts);
+  } catch (error) {
+    sendError(res, error)
   }
 })
 
