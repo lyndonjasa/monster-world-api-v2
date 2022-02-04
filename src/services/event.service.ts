@@ -49,13 +49,13 @@ export async function tameMonster(request: TameActionRequest): Promise<TameActio
     }
 
     // validate that the monster is included on the session
-    const sessionMonsters = dungeonSession.map(ds => (ds.monster as Types.ObjectId).toString())
-    if (!sessionMonsters.includes(request.monsterId)) {
+    const tamedMonster = dungeonSession.find(ds => ds._id.toString() === request.monsterId)
+    if (!tamedMonster) {
       throwError(400, 'Invalid Monster Id')
     }
 
     // validate monster Id
-    const requestedMonster = await Monster.findById(request.monsterId);
+    const requestedMonster = await Monster.findById(tamedMonster.monster);
     if (!requestedMonster) {
       throwError(400, 'Invalid Monster Id');
     }
@@ -80,8 +80,10 @@ export async function tameMonster(request: TameActionRequest): Promise<TameActio
     if (success) {
       response.success = true;
 
-      const tamedMonster = await addMonsterToAccount(request.accountId, [request.monsterId]);
+      const tamedMonster = await addMonsterToAccount(request.accountId, [requestedMonster.id.toString()]);
       response.detailedMonsterId = tamedMonster[0].id
+
+      await DetailedMonster.findByIdAndDelete(request.monsterId);
     }
 
     return response;
