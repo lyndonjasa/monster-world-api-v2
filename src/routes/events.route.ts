@@ -1,7 +1,7 @@
 import express from 'express'
 import { sendError } from '../helpers/error.helper';
-import { TameActionRequest } from '../models/requests';
-import { tameMonster } from '../services/event.service';
+import { TameActionRequest, WinBattleRequest } from '../models/requests';
+import { tameMonster, winBattle } from '../services/event.service';
 
 const EventRouter = express.Router();
 
@@ -16,6 +16,20 @@ EventRouter.post('/events/tame', async (req, res) => {
     res.send(result);
   } catch (error) {
     sendError(res, error);
+  }
+})
+
+/**
+ * End a Battle session
+ */
+ EventRouter.post('/events/win', async (req, res) => {
+  try {
+    const request = req.body as WinBattleRequest
+    const response = await winBattle(request);
+
+    res.send(response);
+  } catch (error) {
+    res.status(500).send(error);
   }
 })
 
