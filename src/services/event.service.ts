@@ -42,6 +42,18 @@ export async function tameMonster(request: TameActionRequest): Promise<TameActio
       throwError(400, 'Invalid taming item');
     }
 
+    // get the session
+    const dungeonSession = await DetailedMonster.find({ accountId: new Types.ObjectId(request.sessionId) })
+    if (!dungeonSession) {
+      throwError(404, 'Dungeon Session not found')
+    }
+
+    // validate that the monster is included on the session
+    const sessionMonsters = dungeonSession.map(ds => (ds.monster as Types.ObjectId).toString())
+    if (!sessionMonsters.includes(request.monsterId)) {
+      throwError(400, 'Invalid Monster Id')
+    }
+
     // validate monster Id
     const requestedMonster = await Monster.findById(request.monsterId);
     if (!requestedMonster) {
