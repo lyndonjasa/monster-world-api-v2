@@ -56,12 +56,12 @@ export async function login(request: LoginRequest): Promise<LoginResponse> {
 
     const user = await User.findOne({ username: username });
     if (!user) {
-      throw { code: 404, message: 'User not found' }
+      throw { errorCode: 404, errorMessage: 'User not found' } as ErrorResponse
     }
 
     const hashedPassword = await hashPassword(request.password, user.salt);
     if (user.password !== hashedPassword) {
-      throw { code: 404, message: 'User not found' }
+      throw { errorCode: 404, errorMessage: 'User not found' } as ErrorResponse
     }
 
     const jwt = await getToken(user.id);

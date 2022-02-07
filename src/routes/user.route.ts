@@ -34,11 +34,7 @@ UserRouter.post('/users/login', async (req, res) => {
 
     res.send(user);
   } catch (error) {
-    if (error.code) {
-      res.status(error.code).send(error.message);
-    }
-
-    res.status(500).send(error);
+    sendError(res, error)
   }
 })
 
