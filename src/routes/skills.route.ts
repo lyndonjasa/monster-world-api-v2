@@ -9,7 +9,7 @@ const SkillRoute = express.Router();
 /**
  * Get List of Skills
  */
-SkillRoute.get('/skills', auth, async (req: IUserRequestPayload, res) => {
+SkillRoute.get('/skills', async (req: IUserRequestPayload, res) => {
   console.log(req.user);
   try {
     const skills = await getSkills();
