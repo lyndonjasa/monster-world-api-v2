@@ -17,12 +17,14 @@ import { EvolutionEnum, starterGroups } from "../shared/constants";
 export async function getAccount(id: string): Promise<IAccountDocument> {
   try {
     const account = await Account.findById(id)
+                          .select('-__v -inventory')
                           .populate('party')
                           .populate({
                             path: 'party',
+                            select: '-cardBonus -__v -_id -accountId -talents -talentPoints',
                             populate: {
                               path: 'monster',
-                              select: 'name element'
+                              select: 'name element -_id'
                             }
                           });
 
