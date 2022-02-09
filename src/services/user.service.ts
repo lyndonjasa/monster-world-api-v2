@@ -103,7 +103,8 @@ export async function getUserAccounts(userId: string): Promise<UserAccountsRespo
         userAccount.monsters.push({
           level: p.level,
           name: p.computedName,
-          thumbnailName: p.name
+          thumbnailName: p.name,
+          element: p.element
         });
       })
 
