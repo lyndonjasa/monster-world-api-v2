@@ -82,17 +82,23 @@ export async function login(request: LoginRequest): Promise<LoginResponse> {
 export async function getUserAccounts(userId: string): Promise<UserAccountsResponse[]> {
   try {
     const accounts = await Account.find({ userId: new Types.ObjectId(userId) })
-    const accountIds = accounts.map(a => a.id.toString());
+    const accountIds = accounts.map(a => { 
+      return {
+        id: a.id.toString(),
+        name: a.accountName
+      }
+    });
     
     const response: UserAccountsResponse[] = [];
     for (let index = 0; index < accountIds.length; index++) {
       const account = accountIds[index];
       const userAccount: UserAccountsResponse = {
-        accountId: account,
+        accountId: account.id,
+        accountName: account.name,
         monsters: []
       }
       
-      const party = await getAccountParty(account);
+      const party = await getAccountParty(account.id);
       party.forEach(p => {
         userAccount.monsters.push({
           level: p.level,
