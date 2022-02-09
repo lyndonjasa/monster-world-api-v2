@@ -102,7 +102,8 @@ export async function getUserAccounts(userId: string): Promise<UserAccountsRespo
       party.forEach(p => {
         userAccount.monsters.push({
           level: p.level,
-          name: p.name
+          name: p.computedName,
+          thumbnailName: p.name
         });
       })
 

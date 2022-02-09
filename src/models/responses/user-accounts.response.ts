@@ -6,5 +6,6 @@ export class UserAccountsResponse {
 
 export class AccountMonster {
   name: string;
+  thumbnailName: string;
   level: number;
 }

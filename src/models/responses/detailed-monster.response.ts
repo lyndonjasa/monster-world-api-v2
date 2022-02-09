@@ -9,6 +9,7 @@ export class DetailedMonsterResponse {
   talents: string[];
   talentPoints: number;
   name: string;
+  computedName: string;
   stats: StatsModel;
   sprite: ISprite;
   element: number;
