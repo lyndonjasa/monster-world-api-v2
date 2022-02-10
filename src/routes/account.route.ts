@@ -108,7 +108,7 @@ AccountRouter.delete('/accounts/:id', async (req, res) => {
 
     res.send(account);
   } catch (error) {
-    res.status(500).send(error)
+    sendError(res, error)
   }
 });
 

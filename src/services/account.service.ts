@@ -148,13 +148,13 @@ export async function createAccount(request: CreateAccountRequest): Promise<Crea
 
     const accounts = await Account.find({ userId: request.userId, isActive: true }).count();
     if (accounts >= 3) {
-      throw 'User has maximized account pool'
+      throwError(400, 'User has maximized account pool')
     }
 
     // check for existing accounts with the same name
     const accountExists = await Account.findOne({ accountName: request.accountName });
     if (accountExists) {
-      throw 'Account Name is already taken'
+      throwError(400, 'Account Name is already taken')
     }
 
     // get the rookie group from the request
