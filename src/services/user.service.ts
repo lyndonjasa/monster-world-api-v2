@@ -23,7 +23,7 @@ export async function createUser(request: CreateUserRequest): Promise<void> {
       { email: request.email }
     ] })
     if (userExists) {
-      throw { errorCode: 400, errorMessage: 'Username or Email is already used' } as ErrorResponse
+      throwError(400, 'Username or Email is already used')
     }
 
     const saltValue = await generateSalt();
@@ -68,6 +68,7 @@ export async function login(request: LoginRequest): Promise<LoginResponse> {
 
     return {
       userId: user.id,
+      username: user.username,
       authToken: jwt
     }
   } catch (error) {
