@@ -7,4 +7,5 @@ export class AccountModel implements IAccount {
   unlockedMonsters: string[];
   party?: IDetailedMonsterDocument[] | string[];
   inventory?: IItemDocument[] | string[];
+  isActive: boolean;
 }

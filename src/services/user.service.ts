@@ -81,7 +81,7 @@ export async function login(request: LoginRequest): Promise<LoginResponse> {
  */
 export async function getUserAccounts(userId: string): Promise<UserAccountsResponse[]> {
   try {
-    const accounts = await Account.find({ userId: new Types.ObjectId(userId) })
+    const accounts = await Account.find({ userId: new Types.ObjectId(userId), isActive: true })
     const accountIds = accounts.map(a => { 
       return {
         id: a.id.toString(),

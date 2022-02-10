@@ -8,6 +8,7 @@ export interface IAccount {
   unlockedMonsters: string[];
   party?: IDetailedMonsterDocument[] | string[];
   inventory?: IItemDocument[] | string[];
+  isActive: boolean;
 }
 
 export interface IAccountDocument extends IAccount, Document {}

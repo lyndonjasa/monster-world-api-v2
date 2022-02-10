@@ -20,7 +20,8 @@ const schema = new Schema({
       type: Types.ObjectId,
       ref: 'Item'
     }
-  ]
+  ],
+  isActive: Boolean
 })
 
 const Account = model<IAccountDocument>('Account', schema, 'accounts')

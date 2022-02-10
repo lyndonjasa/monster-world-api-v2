@@ -35,6 +35,18 @@ export async function getAccount(id: string): Promise<IAccountDocument> {
 }
 
 /**
+ * Sets an Account to inactive
+ * @param id 
+ */
+export async function deleteAccount(id: string): Promise<void> {
+  try {
+    await Account.findByIdAndUpdate(id, { $set: { isActive: false } });
+  } catch (error) {
+    throw error
+  }
+}
+
+/**
  * backdoor functionality for adding 200k currency
  * @param id accountId
  */
@@ -134,7 +146,7 @@ export async function createAccount(request: CreateAccountRequest): Promise<Crea
   try {
     const usedSession = config.environment === 'production' ? session : null
 
-    const accounts = await Account.find({ userId: request.userId }).count();
+    const accounts = await Account.find({ userId: request.userId, isActive: true }).count();
     if (accounts >= 3) {
       throw 'User has maximized account pool'
     }
@@ -154,7 +166,8 @@ export async function createAccount(request: CreateAccountRequest): Promise<Crea
       currency: 1000, // starting currency of 1000
       unlockedMonsters: rookies.monsters.map(m => m),
       userId: request.userId,
-      inventory: []
+      inventory: [],
+      isActive: true
     }
 
     // save the base account

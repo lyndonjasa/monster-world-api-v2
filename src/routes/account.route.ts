@@ -1,7 +1,7 @@
 import express from 'express'
 import { sendError } from '../helpers/error.helper';
 import { CreateAccountRequest, SearchMonsterRequest } from '../models/requests';
-import { addCurrency, createAccount, getAccount, getAccountMonster, getAccountParty, switchParty } from '../services/account.service';
+import { addCurrency, createAccount, deleteAccount, getAccount, getAccountMonster, getAccountParty, switchParty } from '../services/account.service';
 import { convertToCard, getAccountCards } from '../services/card.service';
 import { getAccountInventory } from '../services/item.service';
 import { addMonsterToAccount, applyCardBonus, evolveMonster, getAccountMonsters } from '../services/monster.service';
@@ -22,6 +22,17 @@ AccountRouter.get('/accounts/:id', async (req, res) => {
     } else {
       res.send(account);
     }
+  } catch (error) {
+    res.status(500).send(error);
+  }
+})
+
+AccountRouter.delete('/accounts/:id', async (req, res) => {
+  try {
+    const accountId = req.params.id
+    await deleteAccount(accountId);
+
+    res.send();
   } catch (error) {
     res.status(500).send(error);
   }
