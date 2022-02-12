@@ -65,7 +65,7 @@ export function convertToDetailedMonsterResponse(document: IDetailedMonsterDocum
     _id: document.id || document._id,
     currentExp: document.currentExp,
     element: m.element,
-    expToLevel: getExpToNextLevel(document.currentExp), // TODO: replace this with actual value from exp table
+    expToLevel: getExpToNextLevel(document.currentExp, document.level), // TODO: replace this with actual value from exp table
     level: document.level,
     name: m.name,
     computedName: m.name + bonusIndicator,
@@ -80,8 +80,12 @@ export function convertToDetailedMonsterResponse(document: IDetailedMonsterDocum
   return monster;
 }
 
-const getExpToNextLevel = (currentExp: number) => {
+const getExpToNextLevel = (currentExp: number, currentLevel: number) => {
   const row = expTable.find(e => currentExp >= e.min && currentExp <= e.max);
-
-  return row.max + 1;
+  // if character is currently capped
+  if (row.level !== currentLevel) {
+    return 0
+  } else {
+    return row.max + 1;
+  }
 }
