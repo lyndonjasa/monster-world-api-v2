@@ -19,7 +19,7 @@ export function calculateStats(baseStats: IStats,
   // get stats according to level
     const finalStats: StatsModel = {
       critDamage: baseStats.critDamage,
-      critRate: realignStats(baseStats, statGains, currentLevel, 'critRate'),
+      critRate: +(realignStats(baseStats, statGains, currentLevel, 'critRate') * 2.5).toFixed(2),
       defense: realignStats(baseStats, statGains, currentLevel, 'defense'),
       health: realignStats(baseStats, statGains, currentLevel, 'health'),
       healthRegen: 10,
