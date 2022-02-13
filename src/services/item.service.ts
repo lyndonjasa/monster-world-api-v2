@@ -98,8 +98,7 @@ export async function buyItems(request: BuyItemRequest): Promise<BuyItemResponse
 
       itemResponses.push({
         item: relatedDocument.name,
-        quantity: i.quantity,
-        type: ''
+        quantity: i.quantity
       });
 
       for (let index = 0; index < i.quantity; index++) {
