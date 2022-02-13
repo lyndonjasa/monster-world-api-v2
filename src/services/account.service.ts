@@ -230,7 +230,6 @@ export async function getAccountMonster(monsterId: string, accountId: string): P
                             .findOne({ _id: new Types.ObjectId(monsterId), accountId: new Types.ObjectId(accountId) })
                             .populate({
                               path: 'monster',
-                              select: '-sprite',
                               populate: {
                                 path: 'skills',
                                 select: '-_id -__v'

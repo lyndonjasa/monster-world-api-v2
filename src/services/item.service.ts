@@ -98,7 +98,8 @@ export async function buyItems(request: BuyItemRequest): Promise<BuyItemResponse
 
       itemResponses.push({
         item: relatedDocument.name,
-        quantity: i.quantity
+        quantity: i.quantity,
+        type: ''
       });
 
       for (let index = 0; index < i.quantity; index++) {
@@ -173,7 +174,8 @@ export async function getAccountInventory(accountId: string): Promise<ItemRespon
       inventory.push({
         item: itemDocument.name,
         itemId: itemDocument.id,
-        quantity: ii.count
+        quantity: ii.count,
+        type: itemDocument.type
       });
     })
 

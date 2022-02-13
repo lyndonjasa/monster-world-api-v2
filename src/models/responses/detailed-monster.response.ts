@@ -15,4 +15,5 @@ export class DetailedMonsterResponse {
   element: number;
   skills: ISkill[];
   stage: string;
+  evolution?: string;
 }
