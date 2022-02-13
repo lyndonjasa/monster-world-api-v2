@@ -3,6 +3,7 @@ export interface ItemResponse {
   itemId?: string;
   quantity: number;
   type?: string;
+  description?: string;
 }
 
 export class BuyItemResponse {

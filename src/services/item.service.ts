@@ -174,7 +174,8 @@ export async function getAccountInventory(accountId: string): Promise<ItemRespon
         item: itemDocument.name,
         itemId: itemDocument.id,
         quantity: ii.count,
-        type: itemDocument.type
+        type: itemDocument.type,
+        description: itemDocument.description
       });
     })
 
