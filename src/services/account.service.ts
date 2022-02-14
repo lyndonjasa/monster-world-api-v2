@@ -21,7 +21,7 @@ export async function getAccount(id: string): Promise<IAccountDocument> {
                           .populate('party')
                           .populate({
                             path: 'party',
-                            select: '-cardBonus -__v -_id -accountId -talents -talentPoints',
+                            select: '-__v -accountId -talents -talentPoints',
                             populate: {
                               path: 'monster',
                               select: 'name element -_id'

@@ -7,6 +7,7 @@ import { SearchMonsterRequest } from "../models/requests";
 import { UploadMonsterRequest } from "../models/requests/upload-monster.request";
 import { UploadSpriteRequest } from "../models/requests/upload-sprite.request";
 import { DetailedMonsterResponse } from "../models/responses/detailed-monster.response";
+import { SearchMonsterResponse } from "../models/responses/search-monster.response";
 import { StarterGroupResponse } from "../models/responses/starter-group.response";
 import { IDetailedMonster, IDetailedMonsterDocument } from "../mongo/interfaces";
 import { IMonsterDocument } from "../mongo/interfaces/monster.interface";
@@ -210,7 +211,7 @@ export async function addMonsterToAccount(accountId: string, request: string[]):
  * Fetches all monsters owned by the account
  * @param accountId Account Id
  */
-export async function getAccountMonsters(accountId: string, criteria: SearchMonsterRequest): Promise<DetailedMonsterResponse[]> {
+export async function getAccountMonsters(accountId: string, criteria: SearchMonsterRequest): Promise<SearchMonsterResponse> {
   try {
     validateSearchCriteria(criteria);
 
@@ -270,6 +271,7 @@ export async function getAccountMonsters(accountId: string, criteria: SearchMons
       })
     }
 
+    const allMonsters = await DetailedMonster.aggregate(fullAggregation).count('count');
     const documents = await DetailedMonster
                             .aggregate(fullAggregation)
                             .skip((page - 1) * pageSize)
@@ -277,7 +279,10 @@ export async function getAccountMonsters(accountId: string, criteria: SearchMons
 
     const monsters = documents.map(d => convertToDetailedMonsterResponse(d))
 
-    return monsters;
+    return {
+      totalCount: allMonsters.length > 0 ? allMonsters[0].count : 0,
+      monsters
+    };
   } catch (error) {
     throw error
   }
