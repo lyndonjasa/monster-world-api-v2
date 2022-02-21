@@ -16,4 +16,5 @@ export class DetailedMonsterResponse {
   skills: ISkill[];
   stage: string;
   evolution?: string;
+  appliedCards: number;
 }

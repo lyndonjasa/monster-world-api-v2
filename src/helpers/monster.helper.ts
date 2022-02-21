@@ -75,7 +75,8 @@ export function convertToDetailedMonsterResponse(document: IDetailedMonsterDocum
     talentPoints: document.talentPoints,
     stats: calculateStats(m.baseStats, m.statGain, document.level, document.talents, document.cardBonus, m.stage),
     stage: m.stage,
-    evolution: m.evolution
+    evolution: m.evolution,
+    appliedCards: document.cardBonus
   }
 
   return monster;
