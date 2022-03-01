@@ -134,7 +134,7 @@ const applyTalentBonuses = (stats: StatsModel, talents: string[]) => {
  * @param unlockedMonsterCount Current Number of Unlocked Monsters of the Account
  */
 export function getBonusCatchRate(unlockedMonsterCount: number) {
-  const bonus = Math.floor(unlockedMonsterCount / 5)
+  const bonus = (Math.floor(unlockedMonsterCount / 5) * 2)
 
   return bonus <= config.maxBonusCatchRate ? bonus : config.maxBonusCatchRate;
 }
